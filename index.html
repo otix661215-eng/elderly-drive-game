@@ -1175,121 +1175,17 @@ function drawCar(cx, cy, w, h, angle, color, isPlayer) {
 function drawRoadMarkings() {
   ctx.save();
 
-  if (level.spot.type === 'parallel') {
-    // Roadside parking: driving lane along the bottom
-    // Dashed center lane line
+  if (currentLevel === 10) {
+    // S-curve: dashed center line only
     ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-    ctx.lineWidth = 3;
-    ctx.setLineDash([20, 15]);
-    ctx.beginPath();
-    ctx.moveTo(0, H - 140);
-    ctx.lineTo(W, H - 140);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Solid parking area border
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, H - 95);
-    ctx.lineTo(W, H - 95);
-    ctx.stroke();
-
-    // Dashed lane edge lines
-    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([10, 10]);
-    ctx.beginPath();
-    ctx.moveTo(0, H - 110);
-    ctx.lineTo(W, H - 110);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Direction arrows
-    ctx.fillStyle = 'rgba(255,255,255,0.2)';
-    ctx.font = '24px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('>', 50, H - 125);
-    ctx.fillText('>', 750, H - 125);
-
-  } else if (level.spot.type === 'perpendicular' || level.spot.type === 'forward') {
-    if (currentLevel === 10) {
-      // S-curve: dashed center line only
-      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-      ctx.lineWidth = 4;
-      ctx.setLineDash([18, 12]);
-      ctx.beginPath();
-      ctx.moveTo(100, 480);
-      ctx.bezierCurveTo(210, 470, 220, 320, 215, 250);
-      ctx.bezierCurveTo(210, 180, 350, 230, 470, 220);
-      ctx.bezierCurveTo(540, 215, 600, 180, 660, 150);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    } else {
-      // Parking garage: vertical driving lane + parking rows
-      // Dashed center lane line
-      ctx.setLineDash([20, 15]);
-      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(W/2, 55);
-      ctx.lineTo(W/2, H - 80);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Dashed horizontal parking row separator
-      ctx.setLineDash([15, 10]);
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(0, 80);
-      ctx.lineTo(W, 80);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Dashed lane dividers between parking columns
-      ctx.setLineDash([12, 8]);
-      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(W/2 - 100, 55);
-      ctx.lineTo(W/2 - 100, H - 80);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(W/2 + 100, 55);
-      ctx.lineTo(W/2 + 100, H - 80);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Direction arrows
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.font = '20px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('˄', W/2, H - 100);
-      ctx.fillText('˅', W/2, 70);
-    }
-
-  } else if (level.spot.type === 'diagonal') {
-    // Diagonal parking: dashed driving lane
-    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.setLineDash([18, 12]);
     ctx.beginPath();
-    ctx.moveTo(0, H - 140);
-    ctx.lineTo(W, H - 140);
+    ctx.moveTo(100, 480);
+    ctx.bezierCurveTo(210, 470, 220, 320, 215, 250);
+    ctx.bezierCurveTo(210, 180, 350, 230, 470, 220);
+    ctx.bezierCurveTo(540, 215, 600, 180, 660, 150);
     ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Dashed diagonal separators
-    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([10, 8]);
-    for (let dx = 200; dx < W; dx += 120) {
-      ctx.beginPath();
-      ctx.moveTo(dx, H - 140);
-      ctx.lineTo(dx - 60, H - 80);
-      ctx.stroke();
-    }
     ctx.setLineDash([]);
   }
 
