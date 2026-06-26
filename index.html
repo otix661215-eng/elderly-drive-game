@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🚗 銀髮兜風樂</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #2c3e50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+    overflow: hidden;
+    touch-action: none;
+  }
+  #gameContainer {
+    position: relative;
+    width: 800px;
+    max-width: 100vw;
+    height: 600px;
+    max-height: 100vh;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+  }
+  /* Start Screen */
+  #startScreen {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border-radius: 12px; z-index: 10;
+  }
+  #startScreen h1 {
+    font-size: 52px; color: #fff;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+    margin-bottom: 10px;
+  }
+  #startScreen .subtitle {
+    font-size: 22px; color: #ffeaa7;
+    margin-bottom: 40px;
+  }
+  .mode-btn {
+    display: block; width: 320px; padding: 18px;
+    margin: 8px 0; font-size: 22px;
+    border: none; border-radius: 16px;
+    cursor: pointer; font-family: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+    color: #fff;
+  }
+  .mode-btn:hover { transform: scale(1.05); }
+  .mode-btn:active { transform: scale(0.97); }
+  .mode-btn.island { background: linear-gradient(135deg, #00b894, #00cec9); }
+  .mode-btn.nostalgia { background: linear-gradient(135deg, #e17055, #fdcb6e); }
+  .mode-btn.grandchild { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+  .controls-hint {
+    margin-top: 30px; color: #dfe6e9; font-size: 16px; text-align: center;
+    line-height: 1.8;
+  }
+
+  /* HUD */
+  #hud {
+    position: absolute; top: 10px; left: 10px; right: 10px;
+    display: none; justify-content: space-between;
+    pointer-events: none; z-index: 5;
+  }
+  .hud-box {
+    background: rgba(0,0,0,0.55); color: #fff;
+    padding: 8px 16px; border-radius: 10px;
+    font-size: 20px; font-weight: bold;
+  }
+
+  /* Mobile controls */
+  #mobileControls {
+    position: absolute; bottom: 10px; left: 10px; right: 10px;
+    display: none; justify-content: space-between; z-index: 5;
+  }
+  .mobile-btn {
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.3);
+    border: 3px solid rgba(255,255,255,0.6);
+    border-radius: 50%; color: #fff;
+    font-size: 36px; display: flex;
+    align-items: center; justify-content: center;
+    cursor: pointer; user-select: none;
+    -webkit-user-select: none;
+  }
+  .mobile-btn:active { background: rgba(255,255,255,0.5); }
+  .mobile-btn-group { display: flex; gap: 10px; }
+
+  /* Notifications */
+  #notification {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.85); color: #ffeaa7;
+    padding: 20px 40px; border-radius: 16px;
+    font-size: 26px; text-align: center;
+    display: none; z-index: 6;
+      animation: fadeInOut 3s ease-in-out forwards;
+  }
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Pause overlay */
+  #pauseOverlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    border-radius: 12px; z-index: 8;
+  }
+  #pauseOverlay h2 { color: #fff; font-size: 42px; margin-bottom: 20px; }
+  #pauseOverlay button {
+    padding: 14px 40px; font-size: 22px;
+    border: none; border-radius: 12px;
+    cursor: pointer; margin: 6px;
+    font-family: inherit;
+  }
+  #resumeBtn { background: #00b894; color: #fff; }
+  #quitBtn { background: #d63031; color: #fff; }
+
+  /* Milestone popup */
+  .milestone-popup {
+    position: absolute; top: 80px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #fdcb6e, #e17055);
+    color: #fff; padding: 16px 30px;
+    border-radius: 14px; font-size: 22px;
+    font-weight: bold; z-index: 6;
+    animation: slideDown 0.5s ease-out, fadeOut 0.5s 2.5s ease-in forwards;
+  }
+  @keyframes slideDown {
+    from { top: -60px; opacity: 0; }
+    to { top: 80px; opacity: 1; }
+  }
+  @keyframes fadeOut {
+    to { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="gameContainer">
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h1>🚗 銀髮兜風樂</h1>
+    <div class="subtitle">放鬆兜風，享受風景</div>
+    <button class="mode-btn island" onclick="startGame('island')">🏝️ 環島兜風</button>
+    <button class="mode-btn nostalgia" onclick="startGame('nostalgia')">📻 懷舊巡禮</button>
+    <button class="mode-btn grandchild" onclick="startGame('grandchild')">👦 接孫子</button>
+    <div class="controls-hint">
+      ⌨️ 方向鍵 / WASD 控制<br>
+      📱 手機：左右按鈕轉彎<br>
+      🔇 永遠不會 Game Over！
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-box" id="hudLeft">🏞️ 北海岸線</div>
+    <div class="hud-box" id="hudCenter">🚗 0 km</div>
+    <div class="hud-box" id="hudRight">📸 0 張</div>
+  </div>
+
+  <!-- Mobile Controls -->
+  <div id="mobileControls">
+    <div class="mobile-btn-group">
+      <div class="mobile-btn" ontouchstart="mobileLeft=true" ontouchend="mobileLeft=false" onmousedown="mobileLeft=true" onmouseup="mobileLeft=false">⬅️</div>
+    </div>
+    <div class="mobile-btn-group">
+      <div class="mobile-btn" ontouchstart="mobileAccel=true" ontouchend="mobileAccel=false" onmousedown="mobileAccel=true" onmouseup="mobileAccel=false" style="font-size:24px">🚗</div>
+    </div>
+    <div class="mobile-btn-group">
+      <div class="mobile-btn" ontouchstart="mobileRight=true" ontouchend="mobileRight=false" onmousedown="mobileRight=true" onmouseup="mobileRight=false">➡️</div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div id="notification"></div>
+
+  <!-- Pause Overlay -->
+  <div id="pauseOverlay">
+    <h2>⏸️ 暫停</h2>
+    <button id="resumeBtn" onclick="resumeGame()">繼續兜風</button>
+    <button id="quitBtn" onclick="quitGame()">回主選單</button>
+  </div>
+</div>
+
+<script>
+// ====== GAME CONFIG ======
+const W = 800, H = 600;
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = W; canvas.height = H;
+
+// Mobile controls state
+let mobileLeft = false, mobileRight = false, mobileAccel = false;
+
+// Game state
+let gameMode, running, paused;
+let car, road, scenery, distance, photos, milestones, notifications;
+let frameCount, weather, timeOfDay;
+
+// Route data per mode
+const ROUTES = {
+  island: {
+    name: '環島兜風',
+    route: '北海岸線',
+    color: '#00b894',
+    skyGrad: ['#74b9ff', '#dfe6e9', '#ffeaa7'],
+    roadColor: '#636e72',
+    grassColors: ['#00b894', '#55a362', '#2d6a4f'],
+    trees: true, ocean: true,
+    landmarks: [
+      { km: 2, name: '淡水老街', emoji: '🏘️' },
+      { km: 5, name: '白沙灣', emoji: '🏖️' },
+      { km: 10, name: '野柳女王頭', emoji: '🪨' },
+      { km: 16, name: '鼻頭角', emoji: '⛰️' },
+      { km: 22, name: '九份老街', emoji: '🏮' },
+      { km: 30, name: '福隆便當', emoji: '🍱' },
+      { km: 40, name: '太魯閣', emoji: '🏔️' },
+      { km: 55, name: '日月潭', emoji: '🏞️' },
+      { km: 70, name: '阿里山', emoji: '🌲' },
+      { km: 90, name: '墾丁', emoji: '🌴' },
+    ]
+  },
+  nostalgia: {
+    name: '懷舊巡禮',
+    route: '60年代台灣',
+    color: '#e17055',
+    skyGrad: ['#fab1a0', '#ffeaa7', '#fdcb6e'],
+    roadColor: '#b2bec3',
+    grassColors: ['#a8e6cf', '#dcedc1', '#ffd3b6'],
+    trees: true, ocean: false,
+    landmarks: [
+      { km: 2, name: '柑仔店', emoji: '🏪' },
+      { km: 5, name: '腳踏車修理行', emoji: '🚲' },
+      { km: 10, name: '廟口', emoji: '🏯' },
+      { km: 15, name: '冰果室', emoji: '🍧' },
+      { km: 20, name: '戲院', emoji: '🎬' },
+      { km: 28, name: '火車站', emoji: '🚂' },
+      { km: 35, name: '夜市', emoji: '🌃' },
+      { km: 45, name: '米店', emoji: '🌾' },
+      { km: 55, name: '理髮廳', emoji: '💈' },
+      { km: 70, name: '老學校', emoji: '🏫' },
+    ]
+  },
+  grandchild: {
+    name: '接孫子',
+    route: '從家出發',
+    color: '#6c5ce7',
+    skyGrad: ['#a29bfe', '#dfe6e9', '#ffeaa7'],
+    roadColor: '#636e72',
+    grassColors: ['#55efc4', '#81ecec', '#74b9ff'],
+    trees: true, ocean: false,
+    landmarks: [
+      { km: 1, name: '家門口', emoji: '🏠' },
+      { km: 3, name: '早餐店', emoji: '🥐' },
+      { km: 5, name: '葱油餅攤', emoji: '🫓' },
+      { km: 8, name: '豆花店', emoji: '🍮' },
+      { km: 10, name: '公園', emoji: '🌳' },
+      { km: 13, name: '便利商店', emoji: '🏪' },
+      { km: 15, name: '學校門口', emoji: '👦' },
+    ]
+  }
+};
+
+// Scenery objects pool
+const TREE_TYPES = ['🌳', '🌲', '🌴', '🌻', '🏡', '🏪', '🏮', '🛖'];
+const OCEAN_CHARS = ['🌊', '🐟', '⛵', '🦈'];
+
+// ====== INITIALIZATION ======
+function startGame(mode) {
+  gameMode = mode;
+  running = true;
+  paused = false;
+  frameCount = 0;
+  distance = 0;
+  photos = 0;
+  milestones = [];
+
+  const route = ROUTES[mode];
+  car = {
+    x: W / 2,
+    y: H - 140,
+    speed: 0,
+    maxSpeed: 3.5,
+    accel: 0.08,
+    decel: 0.03,
+    turnSpeed: 3.5,
+    tilt: 0,
+    width: 50,
+    height: 80,
+  };
+
+  road = {
+    offset: 0,
+    curve: 0,
+    targetCurve: 0,
+    width: 260,
+    segments: [],
+  };
+
+  scenery = [];
+  weather = 'sunny';
+  timeOfDay = 0; // 0=day, cycles
+
+  // Generate initial scenery
+  for (let i = 0; i < 30; i++) {
+    addSceneryObject(true);
+  }
+
+  // Show UI
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('hud').style.display = 'flex';
+  document.getElementById('hudLeft').textContent = '🏞️ ' + route.route;
+
+  // Show mobile controls on touch devices
+  if ('ontouchstart' in window) {
+    document.getElementById('mobileControls').style.display = 'flex';
+  }
+
+  showNotification('出發囉！🚗 方向鍵控制，享受旅程～');
+  requestAnimationFrame(gameLoop);
+}
+
+function addSceneryObject(randomY) {
+  const route = ROUTES[gameMode];
+  const side = Math.random() < 0.5 ? -1 : 1;
+  const obj = {
+    type: route.ocean && side > 0 && Math.random() < 0.3
+      ? OCEAN_CHARS[Math.floor(Math.random() * OCEAN_CHARS.length)]
+      : TREE_TYPES[Math.floor(Math.random() * TREE_TYPES.length)],
+    x: side * (160 + Math.random() * 200),
+    y: randomY ? Math.random() * H : -30 - Math.random() * 60,
+    size: 28 + Math.random() * 18,
+    speed: 0.5 + Math.random() * 0.5,
+  };
+  scenery.push(obj);
+}
+
+// ====== INPUT ======
+const keys = {};
+document.addEventListener('keydown', e => {
+  keys[e.key] = true;
+  if (e.key === 'Escape' || e.key === 'p') togglePause();
+  if (e.key === ' ' && running && !paused) takePhoto();
+});
+document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+// ====== GAME LOOP ======
+let lastTime = 0;
+function gameLoop(time) {
+  if (!running) return;
+  if (paused) { requestAnimationFrame(gameLoop); return; }
+
+  const dt = Math.min((time - lastTime) / 16.67, 2); // normalize to ~60fps
+  lastTime = time;
+
+  update(dt);
+  render();
+  frameCount++;
+
+  requestAnimationFrame(gameLoop);
+}
+
+function update(dt) {
+  // Car controls
+  const left = keys['ArrowLeft'] || keys['a'] || keys['A'] || mobileLeft;
+  const right = keys['ArrowRight'] || keys['d'] || keys['D'] || mobileRight;
+  const up = keys['ArrowUp'] || keys['w'] || keys['W'] || mobileAccel;
+  const down = keys['ArrowDown'] || keys['s'] || keys['S'];
+
+  // Steering
+  if (left) car.tilt -= car.turnSpeed * dt * 0.1;
+  if (right) car.tilt += car.turnSpeed * dt * 0.1;
+  car.tilt *= 0.92; // damping
+
+  // Clamp tilt
+  car.tilt = Math.max(-1, Math.min(1, car.tilt));
+
+  // Move car laterally
+  car.x += car.tilt * car.turnSpeed * dt;
+  car.x = Math.max(140, Math.min(W - 140, car.x));
+
+  // Speed
+  if (up) car.speed = Math.min(car.maxSpeed, car.speed + car.accel * dt);
+  else if (down) car.speed = Math.max(0, car.speed - car.accel * 2 * dt);
+  else car.speed = Math.max(0, car.speed - car.decel * dt);
+
+  // Auto-cruise minimum speed
+  if (!up && !down && car.speed < 0.5) car.speed = 0.5;
+
+  // Road curve
+  road.targetCurve = car.tilt * 0.8;
+  road.curve += (road.targetCurve - road.curve) * 0.05 * dt;
+  road.offset += car.speed * dt;
+  distance += car.speed * 0.002 * dt;
+
+  // Update scenery
+  for (let obj of scenery) {
+    obj.y += car.speed * obj.speed * dt;
+  }
+  // Remove off-screen and add new
+  scenery = scenery.filter(o => o.y < H + 50);
+  if (frameCount % 8 === 0) addSceneryObject(false);
+
+  // Time of day cycle (every ~3 minutes)
+  timeOfDay = (timeOfDay + 0.0001 * dt) % 1;
+
+  // Check landmarks
+  const route = ROUTES[gameMode];
+  for (const lm of route.landmarks) {
+    const distKm = Math.floor(distance);
+    if (distKm === lm.km && !milestones.includes(lm.km)) {
+      milestones.push(lm.km);
+      showNotification(`${lm.emoji} 抵達 ${lm.name}！`);
+    }
+  }
+
+  // Milestones at certain distances
+  if ([5, 10, 25, 50, 100].includes(Math.floor(distance)) &&
+      !milestones.includes('km'+Math.floor(distance))) {
+    milestones.push('km'+Math.floor(distance));
+    const km = Math.floor(distance);
+    const badge = km >= 50 ? '🏆' : km >= 25 ? '⭐' : '🏁';
+    showNotification(`${badge} 已行駛 ${km} 公里！`);
+  }
+
+  // Update HUD
+  document.getElementById('hudCenter').textContent = `🚗 ${distance.toFixed(1)} km`;
+  document.getElementById('hudRight').textContent = `📸 ${photos} 張`;
+}
+
+function render() {
+  const route = ROUTES[gameMode];
+
+  // Sky gradient based on time
+  const skyTop = lerpColor(route.skyGrad[0], '#2d3436', timeOfDay < 0.5 ? 0 : (timeOfDay - 0.5) * 2);
+  const skyMid = route.skyGrad[1];
+  const skyBot = route.skyGrad[2];
+
+  // Draw sky
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.4);
+  skyGrad.addColorStop(0, skyTop);
+  skyGrad.addColorStop(0.5, skyMid);
+  skyGrad.addColorStop(1, skyBot);
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, H * 0.4);
+
+  // Sun/Moon
+  if (timeOfDay < 0.3 || timeOfDay > 0.7) {
+    // Sun
+    ctx.fillStyle = '#ffeaa7';
+    ctx.beginPath();
+    ctx.arc(timeOfDay < 0.3 ? W * 0.8 : W * 0.2, 80, 40, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    // Stars at night
+    ctx.fillStyle = '#fff';
+    for (let i = 0; i < 30; i++) {
+      const sx = (i * 137.5 + frameCount * 0.01) % W;
+      const sy = (i * 97.3) % (H * 0.3);
+      ctx.fillRect(sx, sy, 2, 2);
+    }
+  }
+
+  // Draw ocean (island mode)
+  if (route.ocean) {
+    ctx.fillStyle = '#0984e3';
+    ctx.fillRect(W * 0.65, H * 0.3, W * 0.35, H * 0.15);
+    // Waves
+    for (let wx = W * 0.65; wx < W; wx += 40) {
+      const wy = H * 0.38 + Math.sin(wx * 0.05 + frameCount * 0.03) * 5;
+      ctx.fillStyle = '#74b9ff';
+      ctx.fillRect(wx, wy, 30, 3);
+    }
+  }
+
+  // Draw ground
+  ctx.fillStyle = route.grassColors[0];
+  ctx.fillRect(0, H * 0.35, W, H * 0.65);
+
+  // Grass texture
+  for (let gy = H * 0.35; gy < H; gy += 30) {
+    ctx.fillStyle = route.grassColors[1 + (gy % 2)];
+    for (let gx = 0; gx < W; gx += 50) {
+      ctx.fillRect(gx + Math.sin(gy * 0.1) * 10, gy, 25, 15);
+    }
+  }
+
+  // Draw road
+  const roadCenterX = W / 2 + road.curve * 100;
+  const roadW = 280;
+  const roadLeft = roadCenterX - roadW / 2;
+  const roadRight = roadCenterX + roadW / 2;
+
+  // Road shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.fillRect(roadCenterX - roadW / 2 - 5, H * 0.3, roadW + 10, H * 0.72);
+
+  // Road surface
+  ctx.fillStyle = route.roadColor;
+  ctx.fillRect(roadCenterX - roadW / 2, H * 0.3, roadW, H * 0.7);
+
+  // Road markings - center dashed line
+  ctx.setLineDash([30, 20]);
+  ctx.strokeStyle = '#ffeaa7';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(roadCenterX + road.curve * 50, H * 0.3);
+  ctx.lineTo(roadCenterX + road.curve * 20, H);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Road side lines
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(roadLeft + 5 + road.curve * 30, H * 0.3);
+  ctx.lineTo(roadLeft + 5 + road.curve * 10, H);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(roadRight - 5 + road.curve * 30, H * 0.3);
+  ctx.lineTo(roadRight - 5 + road.curve * 10, H);
+  ctx.stroke();
+
+  // Draw scenery objects
+  const sortedScenery = [...scenery].sort((a, b) => a.y - b.y);
+  for (const obj of sortedScenery) {
+    const sx = roadCenterX + obj.x + road.curve * (obj.y / H) * 80;
+    const scale = 0.5 + (obj.y / H) * 0.8;
+    ctx.font = `${obj.size * scale}px serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(obj.type, sx, obj.y);
+  }
+
+  // Draw landmark markers on road
+  const route2 = ROUTES[gameMode];
+  for (const lm of route2.landmarks) {
+    const lmY = ((lm.km - distance) * 50 + H) % (H * 2);
+    if (lmY > 0 && lmY < H) {
+      const lmX = roadCenterX + road.curve * lmY * 0.08;
+      ctx.font = '32px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(lm.emoji, lmX, lmY);
+      ctx.font = 'bold 14px sans-serif';
+      ctx.fillStyle = '#fff';
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 3;
+      ctx.strokeText(lm.name, lmX, lmY + 22);
+      ctx.fillText(lm.name, lmX, lmY + 22);
+    }
+  }
+
+  // Draw car
+  drawCar(car.x, car.y, car.tilt);
+
+  // Speed indicator (subtle)
+  if (car.speed > 0.5) {
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`時速 ${Math.round(car.speed * 30)} km/h`, 15, H - 15);
+  }
+
+  // Weather particles
+  if (weather === 'rain') {
+    ctx.strokeStyle = 'rgba(116, 185, 255, 0.6)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 60; i++) {
+      const rx = Math.random() * W;
+      const ry = (Math.random() * H + frameCount * 5) % H;
+      ctx.beginPath();
+      ctx.moveTo(rx, ry);
+      ctx.lineTo(rx - 2, ry + 12);
+      ctx.stroke();
+    }
+  }
+}
+
+function drawCar(x, y, tilt) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(tilt * 0.15);
+
+  // Car body
+  ctx.fillStyle = gameMode === 'nostalgia' ? '#e17055' :
+                  gameMode === 'grandchild' ? '#6c5ce7' : '#0984e3';
+  ctx.beginPath();
+  ctx.roundRect(-25, -40, 50, 80, 10);
+  ctx.fill();
+
+  // Windshield
+  ctx.fillStyle = '#74b9ff';
+  ctx.beginPath();
+  ctx.roundRect(-18, -35, 36, 25, 6);
+  ctx.fill();
+
+  // Rear window
+  ctx.fillStyle = '#74b9ff';
+  ctx.beginPath();
+  ctx.roundRect(-18, 15, 36, 18, 6);
+  ctx.fill();
+
+  // Wheels
+  ctx.fillStyle = '#2d3436';
+  ctx.fillRect(-30, -25, 8, 16);
+  ctx.fillRect(22, -25, 8, 16);
+  ctx.fillRect(-30, 18, 8, 16);
+  ctx.fillRect(22, 18, 8, 16);
+
+  // Headlights
+  ctx.fillStyle = '#ffeaa7';
+  ctx.beginPath();
+  ctx.arc(-15, -42, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(15, -42, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Exhaust when moving
+  if (car.speed > 1) {
+    for (let e = 0; e < 3; e++) {
+      ctx.fillStyle = `rgba(200,200,200,${0.3 - e * 0.1})`;
+      ctx.beginPath();
+      ctx.arc(
+        -5 + Math.random() * 10,
+        45 + e * 8 + Math.random() * 5,
+        4 + e * 3, 0, Math.PI * 2
+      );
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+}
+
+// ====== ACTIONS ======
+function takePhoto() {
+  photos++;
+  // Flash effect
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillRect(0, 0, W, H);
+  showNotification(`📸 喀嚓！第 ${photos} 張照片`);
+}
+
+function togglePause() {
+  paused = !paused;
+  document.getElementById('pauseOverlay').style.display = paused ? 'flex' : 'none';
+}
+
+function resumeGame() {
+  paused = false;
+  document.getElementById('pauseOverlay').style.display = 'none';
+}
+
+function quitGame() {
+  running = false;
+  paused = false;
+  document.getElementById('pauseOverlay').style.display = 'none';
+  document.getElementById('hud').style.display = 'none';
+  document.getElementById('mobileControls').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'flex';
+}
+
+function showNotification(text) {
+  const el = document.getElementById('notification');
+  el.textContent = text;
+  el.style.display = 'block';
+  el.style.animation = 'none';
+  el.offsetHeight; // reflow
+  el.style.animation = 'fadeInOut 3s ease-in-out forwards';
+  setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+// ====== HELPERS ======
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return [r, g, b];
+}
+
+function lerpColor(c1, c2, t) {
+  const [r1, g1, b1] = hexToRgb(c1);
+  const [r2, g2, b2] = hexToRgb(c2);
+  const r = Math.round(r1 + (r2 - r1) * t);
+  const g = Math.round(g1 + (g2 - g1) * t);
+  const b = Math.round(b1 + (b2 - b1) * t);
+  return `rgb(${r},${g},${b})`;
+}
+
+// Polyfill roundRect if needed
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (typeof r === 'number') r = [r, r, r, r];
+    const [tl, tr, br, bl] = r;
+    this.moveTo(x + tl, y);
+    this.lineTo(x + w - tr, y);
+    this.quadraticCurveTo(x + w, y, x + w, y + tr);
+    this.lineTo(x + w, y + h - br);
+    this.quadraticCurveTo(x + w, y + h, x + w - br, y + h);
+    this.lineTo(x + bl, y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - bl);
+    this.lineTo(x, y + tl);
+    this.quadraticCurveTo(x, y, x + tl, y);
+    this.closePath();
+    return this;
+  };
+}
+
+// Touch: detect mobile
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+  document.getElementById('mobileControls').style.display = 'flex';
+}
+
+// Prevent scrolling on mobile
+document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+
+// Photo button for mobile (double-tap canvas)
+let lastTap = 0;
+canvas.addEventListener('touchend', e => {
+  const now = Date.now();
+  if (now - lastTap < 300 && running && !paused) takePhoto();
+  lastTap = now;
+});
+
+// Keyboard photo hint
+console.log('🚗 銀髮兜風樂 — 按 [空白鍵] 拍照、[ESC] 暫停');
+</script>
+</body>
+</html>
