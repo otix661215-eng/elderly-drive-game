@@ -326,11 +326,11 @@ function initSteeringWheel() {
 
   function updateWheelVisual() {
     if (handle) {
-      handle.style.transform = `rotate(${wheelAngle}rad)`;
-      // Move handle around circle
+      // Handle starts at top (12 o'clock), rotates with wheelAngle
+      // wheelAngle=0 → top, positive = clockwise (right)
       const r = 52;
-      const x = Math.sin(wheelAngle - Math.PI/2) * r;
-      const y = -Math.cos(wheelAngle - Math.PI/2) * r;
+      const x = Math.sin(wheelAngle) * r;
+      const y = -Math.cos(wheelAngle) * r;
       handle.style.transform = `translate(${x}px, ${y}px)`;
     }
   }
