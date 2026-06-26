@@ -1006,9 +1006,6 @@ function render() {
   // Parking spot
   drawParkingSpot(parkingSpot);
 
-  // Suggested path
-  if (!parked) drawSuggestedPath(car, parkingSpot);
-
   // Obstacles
   for (const obs of obstacles) {
     if (obs.type === 'car') drawCar(obs.cx, obs.cy, obs.w, obs.h, obs.angle, obs.color);
@@ -1214,8 +1211,7 @@ function drawRoadMarkings() {
     ctx.fillText('>', 750, H - 125);
   } else if (level.spot.type === 'perpendicular' || level.spot.type === 'forward') {
     if (currentLevel === 10) {
-      // S-curve lane for level 11
-      // Path: start (100,470) → bend left around x=150 cones → bend right around x=400 cones → straight to spot (660,130)
+      // S-curve lane for level 11 - dashed center line only
       ctx.strokeStyle = 'rgba(255,255,255,0.4)';
       ctx.lineWidth = 4;
       ctx.setLineDash([18, 12]);
@@ -1227,36 +1223,6 @@ function drawRoadMarkings() {
       ctx.bezierCurveTo(540, 215, 600, 180, 660, 150);
       ctx.stroke();
       ctx.setLineDash([]);
-
-      // Solid edge lines
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.lineWidth = 2;
-      // Left edge
-      ctx.beginPath();
-      ctx.moveTo(80, 480);
-      ctx.bezierCurveTo(180, 470, 185, 340, 180, 260);
-      ctx.bezierCurveTo(175, 170, 340, 250, 460, 245);
-      ctx.bezierCurveTo(540, 240, 605, 190, 660, 160);
-      ctx.stroke();
-      // Right edge
-      ctx.beginPath();
-      ctx.moveTo(220, 480);
-      ctx.bezierCurveTo(250, 470, 255, 340, 250, 250);
-      ctx.bezierCurveTo(245, 170, 370, 210, 480, 200);
-      ctx.bezierCurveTo(550, 195, 610, 165, 670, 140);
-      ctx.stroke();
-
-      // Direction arrows along the S-curve
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      ctx.font = 'bold 20px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('↑', 100, 450);
-      ctx.fillText('↗', 210, 350);
-      ctx.fillText('↑', 215, 230);
-      ctx.fillText('↖', 340, 240);
-      ctx.fillText('↑', 470, 200);
-      ctx.fillText('↗', 580, 180);
-      ctx.fillText('↑', 650, 160);
     } else {
       // Parking garage: draw parking row lines
       ctx.strokeStyle = 'rgba(255,255,255,0.25)';
