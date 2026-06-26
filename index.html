@@ -552,21 +552,28 @@ function render() {
     ctx.fillText(obj.type, sx, obj.y);
   }
 
-  // Draw landmark markers on road
+  // Draw landmark markers on road - landmarks approach from far (top) to near (bottom)
   const route2 = ROUTES[gameMode];
   for (const lm of route2.landmarks) {
-    const lmY = ((lm.km - distance) * 50 + H) % (H * 2);
-    if (lmY > 0 && lmY < H) {
-      const lmX = roadCenterX + road.curve * lmY * 0.08;
-      ctx.font = '32px serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(lm.emoji, lmX, lmY);
-      ctx.font = 'bold 14px sans-serif';
+    // Distance from car to landmark in km
+    const kmAway = lm.km - distance;
+    // Only show landmarks that are ahead (within ~8 km range)
+    if (kmAway < -1 || kmAway > 8) continue;
+    // Map: kmAway=8 → y=H*0.3 (far), kmAway=0 → y=H-100 (near car)
+    const t = 1 - (kmAway / 8); // 0=far, 1=near
+    const lmY = H * 0.3 + t * (H - 100 - H * 0.3);
+    const lmX = roadCenterX + road.curve * lmY * 0.08;
+    const scale = 0.4 + t * 0.8; // small when far, big when near
+    ctx.font = `${32 * scale}px serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(lm.emoji, lmX, lmY);
+    if (t > 0.15) { // only show name when close enough to read
+      ctx.font = `bold ${14 * scale}px sans-serif`;
       ctx.fillStyle = '#fff';
       ctx.strokeStyle = '#000';
       ctx.lineWidth = 3;
-      ctx.strokeText(lm.name, lmX, lmY + 22);
-      ctx.fillText(lm.name, lmX, lmY + 22);
+      ctx.strokeText(lm.name, lmX, lmY + 22 * scale);
+      ctx.fillText(lm.name, lmX, lmY + 22 * scale);
     }
   }
 
