@@ -249,10 +249,10 @@ const LEVELS = [
     targetAngle: PI2, // face right
   },
   {
-    // Level 2: 倒車入庫 - car at bottom, reverse into top spot
+    // Level 2: 倒車入庫 - car faces down (away from spot), reverse UP into top spot
     name: "倒車入庫",
     desc: "垂直倒車停入車位",
-    carStart: { x: 400, y: 450, angle: 0 }, // facing up
+    carStart: { x: 400, y: 450, angle: PI }, // facing DOWN (away from spot)
     spot: { cx: 400, cy: 140, w: CAR_W+15, h: CAR_H+10, angle: 0, type: 'perpendicular' },
     obstacles: [
       { cx: 300, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
@@ -262,14 +262,14 @@ const LEVELS = [
       { x: 0, y: 0, w: W, h: 50 },
       { x: 0, y: 520, w: W, h: 80 },
     ],
-    targetAngle: 0, // face up
+    targetAngle: PI, // face down (nose points out, tail in spot)
   },
   {
     // Level 3: 前進停車 - car at bottom, drive forward into top spot
     name: "前進停車",
     desc: "正向開進車位",
     carStart: { x: 400, y: 450, angle: 0 }, // facing up
-    spot: { cx: 400, cy: 140, w: CAR_W+15, h: CAR_H+10, angle: PI, type: 'forward' },
+    spot: { cx: 400, cy: 140, w: CAR_W+15, h: CAR_H+10, angle: 0, type: 'forward' },
     obstacles: [
       { cx: 300, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#fdcb6e' },
       { cx: 500, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#6c5ce7' },
@@ -278,7 +278,7 @@ const LEVELS = [
       { x: 0, y: 0, w: W, h: 50 },
       { x: 0, y: 520, w: W, h: 80 },
     ],
-    targetAngle: PI, // face down (drove in forward, so nose points away from entrance)
+    targetAngle: 0, // face up (nose points into spot)
   },
   {
     // Level 4: 斜向停車 - 45 degree angle
