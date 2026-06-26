@@ -513,15 +513,22 @@ function render() {
   ctx.fillStyle = route.roadColor;
   ctx.fillRect(roadCenterX - roadW / 2, H * 0.3, roadW, H * 0.7);
 
-  // Road markings - center dashed line
-  ctx.setLineDash([30, 20]);
+  // Road markings - center dashed line (scrolls with speed)
+  const dashLen = 40, gapLen = 30, totalDash = dashLen + gapLen;
+  const scrollOffset = road.offset % totalDash;
   ctx.strokeStyle = '#ffeaa7';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(roadCenterX + road.curve * 50, H * 0.3);
-  ctx.lineTo(roadCenterX + road.curve * 20, H);
-  ctx.stroke();
-  ctx.setLineDash([]);
+  ctx.lineWidth = 4;
+  for (let dy = H * 0.3 - totalDash + scrollOffset; dy < H; dy += totalDash) {
+    // perspective: dashes narrow toward horizon
+    const t = (dy - H * 0.3) / (H - H * 0.3); // 0 at top, 1 at bottom
+    const cxTop = roadCenterX + road.curve * (50 + (1-t) * 30);
+    const cxBot = roadCenterX + road.curve * (50 + (1-t) * 30);
+    const cx = roadCenterX + road.curve * (20 + (1-t) * 30);
+    ctx.beginPath();
+    ctx.moveTo(cx, dy);
+    ctx.lineTo(cx, dy + dashLen * (0.3 + t * 0.7));
+    ctx.stroke();
+  }
 
   // Road side lines
   ctx.strokeStyle = '#fff';
