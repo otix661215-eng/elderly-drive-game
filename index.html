@@ -268,7 +268,7 @@ const LEVELS = [
     name: "路邊停車",
     desc: "平行停入路邊車位",
     carStart: { x: 150, y: 430, angle: PI2 }, // facing right, driving along road
-    spot: { cx: 460, cy: 430, w: 105, h: CAR_W+10, angle: PI2, type: 'parallel' },
+    spot: { cx: 460, cy: 430, w: 105, h: CAR_W+10, angle: 0, type: 'parallel' },
     obstacles: [
       { cx: 330, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#e17055' },
       { cx: 570, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#0984e3' },
@@ -313,7 +313,7 @@ const LEVELS = [
     name: "斜向停車",
     desc: "45度斜角停入",
     carStart: { x: 120, y: 450, angle: PI2 }, // facing right
-    spot: { cx: 420, cy: 400, w: 95, h: CAR_W+10, angle: PI2 + PI4, type: 'diagonal' },
+    spot: { cx: 420, cy: 400, w: 95, h: CAR_W+10, angle: PI4, type: 'diagonal' },
     obstacles: [
       { cx: 310, cy: 380, w: CAR_W, h: CAR_H, angle: PI2 + PI4, type: 'car', color: '#00cec9' },
       { cx: 540, cy: 350, w: CAR_W, h: CAR_H, angle: PI2 + PI4, type: 'car', color: '#e17055' },
@@ -326,7 +326,7 @@ const LEVELS = [
     name: "狹窄車位",
     desc: "空間很小，慢慢來",
     carStart: { x: 130, y: 430, angle: PI2 },
-    spot: { cx: 500, cy: 430, w: 82, h: CAR_W+8, angle: PI2, type: 'parallel' },
+    spot: { cx: 500, cy: 430, w: 82, h: CAR_W+8, angle: 0, type: 'parallel' },
     obstacles: [
       { cx: 390, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
       { cx: 590, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
@@ -339,7 +339,7 @@ const LEVELS = [
     name: "綜合挑戰",
     desc: "障礙物更多的小路停車",
     carStart: { x: 130, y: 430, angle: PI2 },
-    spot: { cx: 480, cy: 430, w: 95, h: CAR_W+10, angle: PI2, type: 'parallel' },
+    spot: { cx: 480, cy: 430, w: 95, h: CAR_W+10, angle: 0, type: 'parallel' },
     obstacles: [
       { cx: 350, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#e17055' },
       { cx: 600, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#0984e3' },
@@ -377,7 +377,7 @@ const LEVELS = [
     name: "三角錐挑戰",
     desc: "三角錐圍繞的路邊停車",
     carStart: { x: 120, y: 430, angle: PI2 },
-    spot: { cx: 520, cy: 430, w: 110, h: CAR_W+10, angle: PI2, type: 'parallel' },
+    spot: { cx: 520, cy: 430, w: 110, h: CAR_W+10, angle: 0, type: 'parallel' },
     obstacles: [
       { cx: 400, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
       { cx: 640, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
@@ -417,7 +417,7 @@ const LEVELS = [
     name: "反向路邊停車",
     desc: "從右側停入左側車位",
     carStart: { x: 650, y: 430, angle: -PI2 }, // facing LEFT
-    spot: { cx: 340, cy: 430, w: 105, h: CAR_W+10, angle: -PI2, type: 'parallel' },
+    spot: { cx: 340, cy: 430, w: 105, h: CAR_W+10, angle: 0, type: 'parallel' },
     obstacles: [
       { cx: 210, cy: 430, w: CAR_W, h: CAR_H, angle: -PI2, type: 'car', color: '#00cec9' },
       { cx: 470, cy: 430, w: CAR_W, h: CAR_H, angle: -PI2, type: 'car', color: '#e17055' },
@@ -453,7 +453,7 @@ const LEVELS = [
     name: "最終挑戰",
     desc: "所有技巧的綜合考驗",
     carStart: { x: 120, y: 460, angle: PI2 },
-    spot: { cx: 620, cy: 430, w: 88, h: CAR_W+8, angle: PI2, type: 'parallel' },
+    spot: { cx: 620, cy: 430, w: 88, h: CAR_W+8, angle: 0, type: 'parallel' },
     obstacles: [
       { cx: 500, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
       { cx: 720, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
@@ -865,22 +865,49 @@ function drawParkingSpot(spot) {
   ctx.setLineDash([]);
 
   if (spot.type === 'parallel') {
-    // Side lines + back line (bottom)
+    // Parallel: open at top (-Y = road side), curb line at bottom (+Y)
+    // After rotate(spot.angle), the spot faces the car's direction
     ctx.beginPath();
+    // Left side line
+    ctx.moveTo(-spot.w/2, -spot.h/2);
+    ctx.lineTo(-spot.w/2, spot.h/2);
+    // Right side line
+    ctx.moveTo(spot.w/2, -spot.h/2);
+    ctx.lineTo(spot.w/2, spot.h/2);
+    // Bottom line (curb side = +Y in car space = behind car)
+    ctx.moveTo(-spot.w/2, spot.h/2);
+    ctx.lineTo(spot.w/2, spot.h/2);
+    ctx.stroke();
+  } else if (spot.type === 'perpendicular') {
+    // Reverse-in: U-shape open at bottom (+Y = entrance side)
+    // Top line (back of spot) + two side lines
+    ctx.beginPath();
+    ctx.moveTo(-spot.w/2, -spot.h/2);
+    ctx.lineTo(spot.w/2, -spot.h/2);
     ctx.moveTo(-spot.w/2, -spot.h/2);
     ctx.lineTo(-spot.w/2, spot.h/2);
     ctx.moveTo(spot.w/2, -spot.h/2);
     ctx.lineTo(spot.w/2, spot.h/2);
-    ctx.moveTo(-spot.w/2, spot.h/2);
-    ctx.lineTo(spot.w/2, spot.h/2);
     ctx.stroke();
-  } else {
-    // U-shape (open at bottom for perpendicular/forward)
+  } else if (spot.type === 'forward') {
+    // Forward-in: same U-shape, open at bottom (+Y)
     ctx.beginPath();
     ctx.moveTo(-spot.w/2, -spot.h/2);
-    ctx.lineTo(-spot.w/2, spot.h/2);
-    ctx.lineTo(spot.w/2, spot.h/2);
     ctx.lineTo(spot.w/2, -spot.h/2);
+    ctx.moveTo(-spot.w/2, -spot.h/2);
+    ctx.lineTo(-spot.w/2, spot.h/2);
+    ctx.moveTo(spot.w/2, -spot.h/2);
+    ctx.lineTo(spot.w/2, spot.h/2);
+    ctx.stroke();
+  } else if (spot.type === 'diagonal') {
+    // Diagonal: U-shape open at bottom-left for angled approach
+    ctx.beginPath();
+    ctx.moveTo(-spot.w/2, -spot.h/2);
+    ctx.lineTo(spot.w/2, -spot.h/2);
+    ctx.moveTo(-spot.w/2, -spot.h/2);
+    ctx.lineTo(-spot.w/2, spot.h/2);
+    ctx.moveTo(spot.w/2, -spot.h/2);
+    ctx.lineTo(spot.w/2, spot.h/2);
     ctx.stroke();
   }
 
