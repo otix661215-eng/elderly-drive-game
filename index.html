@@ -475,8 +475,8 @@ const LEVELS = [
     carStart: { x: 150, y: 430, angle: PI2 }, // facing right, driving along road
     spot: { cx: 460, cy: 430, w: 105, h: CAR_W+10, angle: 0, type: 'parallel' },
     obstacles: [
-      { cx: 330, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 570, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 330, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#e17055' },
+      { cx: 570, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#0984e3' },
     ],
     walls: [{ x: 0, y: 520, w: W, h: 80 }],
     targetAngle: PI2, // face right
@@ -488,8 +488,8 @@ const LEVELS = [
     carStart: { x: 400, y: 450, angle: PI }, // facing DOWN (away from spot)
     spot: { cx: 400, cy: 140, w: CAR_W+15, h: CAR_H+10, angle: 0, type: 'perpendicular' },
     obstacles: [
-      { cx: 300, cy: 140, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 500, cy: 140, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 300, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
+      { cx: 500, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#e84393' },
     ],
     walls: [
       { x: 0, y: 0, w: W, h: 50 },
@@ -504,8 +504,8 @@ const LEVELS = [
     carStart: { x: 400, y: 450, angle: 0 }, // facing up
     spot: { cx: 400, cy: 140, w: CAR_W+15, h: CAR_H+10, angle: 0, type: 'forward' },
     obstacles: [
-      { cx: 300, cy: 140, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 500, cy: 140, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 300, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#fdcb6e' },
+      { cx: 500, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#6c5ce7' },
     ],
     walls: [
       { x: 0, y: 0, w: W, h: 50 },
@@ -520,8 +520,8 @@ const LEVELS = [
     carStart: { x: 120, y: 450, angle: PI2 }, // facing right
     spot: { cx: 420, cy: 400, w: 95, h: CAR_W+10, angle: PI4, type: 'diagonal' },
     obstacles: [
-      { cx: 310, cy: 380, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 540, cy: 350, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 310, cy: 380, w: CAR_W, h: CAR_H, angle: PI2 + PI4, type: 'car', color: '#00cec9' },
+      { cx: 540, cy: 350, w: CAR_W, h: CAR_H, angle: PI2 + PI4, type: 'car', color: '#e17055' },
     ],
     walls: [{ x: 0, y: 520, w: W, h: 80 }],
     targetAngle: PI2 + PI4, // 45 degrees
@@ -533,8 +533,8 @@ const LEVELS = [
     carStart: { x: 130, y: 430, angle: PI2 },
     spot: { cx: 500, cy: 430, w: 82, h: CAR_W+8, angle: 0, type: 'parallel' },
     obstacles: [
-      { cx: 390, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 590, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 390, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
+      { cx: 590, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
     ],
     walls: [{ x: 0, y: 520, w: W, h: 80 }],
     targetAngle: PI2,
@@ -546,8 +546,8 @@ const LEVELS = [
     carStart: { x: 130, y: 430, angle: PI2 },
     spot: { cx: 480, cy: 430, w: 95, h: CAR_W+10, angle: 0, type: 'parallel' },
     obstacles: [
-      { cx: 350, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 600, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 350, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#e17055' },
+      { cx: 600, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#0984e3' },
       { cx: 250, cy: 280, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 650, cy: 250, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 100, cy: 200, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
@@ -566,10 +566,10 @@ const LEVELS = [
     carStart: { x: 400, y: 460, angle: PI },
     spot: { cx: 400, cy: 160, w: CAR_W+12, h: CAR_H+10, angle: 0, type: 'perpendicular' },
     obstacles: [
-      { cx: 290, cy: 160, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 510, cy: 160, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 200, cy: 460, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 600, cy: 460, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 290, cy: 160, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
+      { cx: 510, cy: 160, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#e84393' },
+      { cx: 200, cy: 460, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#fdcb6e' },
+      { cx: 600, cy: 460, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#6c5ce7' },
     ],
     walls: [
       { x: 0, y: 0, w: W, h: 50 },
@@ -584,8 +584,8 @@ const LEVELS = [
     carStart: { x: 120, y: 430, angle: PI2 },
     spot: { cx: 520, cy: 430, w: 110, h: CAR_W+10, angle: 0, type: 'parallel' },
     obstacles: [
-      { cx: 400, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 640, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 400, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
+      { cx: 640, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
       { cx: 280, cy: 380, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 280, cy: 480, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 350, cy: 350, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
@@ -602,12 +602,12 @@ const LEVELS = [
     carStart: { x: 400, y: 460, angle: PI },
     spot: { cx: 400, cy: 130, w: CAR_W+10, h: CAR_H+10, angle: 0, type: 'perpendicular' },
     obstacles: [
-      { cx: 290, cy: 130, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 510, cy: 130, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 150, cy: 300, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 650, cy: 300, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 150, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 650, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 290, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
+      { cx: 510, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#e84393' },
+      { cx: 150, cy: 300, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#fdcb6e' },
+      { cx: 650, cy: 300, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#6c5ce7' },
+      { cx: 150, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#e17055' },
+      { cx: 650, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#0984e3' },
     ],
     walls: [
       { x: 0, y: 0, w: W, h: 50 },
@@ -624,8 +624,8 @@ const LEVELS = [
     carStart: { x: 650, y: 430, angle: -PI2 }, // facing LEFT
     spot: { cx: 340, cy: 430, w: 105, h: CAR_W+10, angle: 0, type: 'parallel' },
     obstacles: [
-      { cx: 210, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 470, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 210, cy: 430, w: CAR_W, h: CAR_H, angle: -PI2, type: 'car', color: '#00cec9' },
+      { cx: 470, cy: 430, w: CAR_W, h: CAR_H, angle: -PI2, type: 'car', color: '#e17055' },
       { cx: 560, cy: 300, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 180, cy: 250, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
     ],
@@ -639,8 +639,8 @@ const LEVELS = [
     carStart: { x: 100, y: 470, angle: 0 },
     spot: { cx: 660, cy: 130, w: CAR_W+12, h: CAR_H+10, angle: 0, type: 'forward' },
     obstacles: [
-      { cx: 590, cy: 130, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 720, cy: 130, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 590, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#d63031' },
+      { cx: 720, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#2d3436' },
       // S-curve cones - left side of first bend
       { cx: 150, cy: 370, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 150, cy: 280, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
@@ -667,16 +667,16 @@ const LEVELS = [
     carStart: { x: 120, y: 460, angle: PI2 },
     spot: { cx: 620, cy: 430, w: 88, h: CAR_W+8, angle: 0, type: 'parallel' },
     obstacles: [
-      { cx: 500, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 720, cy: 430, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 500, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
+      { cx: 720, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
       { cx: 350, cy: 380, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 350, cy: 480, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 250, cy: 300, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 550, cy: 300, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 400, cy: 200, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
       { cx: 680, cy: 250, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 150, cy: 200, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 680, cy: 150, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 150, cy: 200, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#6c5ce7' },
+      { cx: 680, cy: 150, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
     ],
     walls: [
       { x: 0, y: 520, w: W, h: 80 },
