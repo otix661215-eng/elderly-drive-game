@@ -326,11 +326,11 @@ function initSteeringWheel() {
 
   function updateWheelVisual() {
     if (handle) {
-      // Handle starts at top (12 o'clock), rotates with wheelAngle
-      // wheelAngle=0 → top, positive = clockwise (right)
+      // Handle starts at 3 o'clock (right), rotates with wheelAngle
+      // wheelAngle=0 → right (3 o'clock), positive = clockwise
       const r = 52;
-      const x = Math.sin(wheelAngle) * r;
-      const y = -Math.cos(wheelAngle) * r;
+      const x = Math.cos(wheelAngle) * r;
+      const y = Math.sin(wheelAngle) * r;
       handle.style.transform = `translate(${x}px, ${y}px)`;
     }
   }
@@ -931,6 +931,11 @@ function render() {
   // Parking spot
   drawParkingSpot(parkingSpot);
 
+  // Suggested path (dashed guide line from car to parking spot)
+  if (!parked) {
+    drawSuggestedPath(car, parkingSpot);
+  }
+
   // Obstacles
   for (const obs of obstacles) {
     if (obs.type === 'car') drawCar(obs.cx, obs.cy, obs.w, obs.h, obs.angle, obs.color);
@@ -1052,6 +1057,63 @@ function drawCar(cx, cy, w, h, angle, color, isPlayer) {
     ctx.closePath();
     ctx.fill();
   }
+
+  ctx.restore();
+}
+
+function drawSuggestedPath(carObj, spot) {
+  // Draw a curved dashed line from car to parking spot center
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,234,167,0.35)';
+  ctx.lineWidth = 4;
+  ctx.setLineDash([12, 8]);
+  ctx.lineCap = 'round';
+
+  const sx = carObj.x, sy = carObj.y;
+  const ex = spot.cx, ey = spot.cy;
+
+  // Control point for a gentle curve
+  // Bias the curve based on relative position
+  const midX = (sx + ex) / 2;
+  const midY = (sy + ey) / 2;
+  // Offset control point perpendicular to the line
+  const dx = ex - sx, dy = ey - sy;
+  const len = Math.hypot(dx, dy) || 1;
+  const perpX = -dy / len;
+  const perpY = dx / len;
+  // Slight curve based on distance
+  const curveOffset = Math.min(60, len * 0.15);
+  // Curve towards open side (away from nearest obstacle)
+  let cpX = midX + perpX * curveOffset;
+  let cpY = midY + perpY * curveOffset;
+
+  // For parallel parking, curve down then into the spot
+  if (spot.type === 'parallel') {
+    // Approach from the side, curve into the spot
+    const approachY = Math.max(sy, ey) + 30;
+    cpX = midX;
+    cpY = approachY;
+  } else if (spot.type === 'perpendicular' || spot.type === 'forward') {
+    // Approach straight then turn into spot
+    cpX = ex;
+    cpY = (sy + ey) / 2;
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(sx, sy);
+  ctx.quadraticCurveTo(cpX, cpY, ex, ey);
+  ctx.stroke();
+
+  // Draw arrow at the end pointing to spot
+  const arrowAngle = Math.atan2(ey - cpY, ex - cpX);
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,234,167,0.5)';
+  ctx.beginPath();
+  ctx.moveTo(ex, ey);
+  ctx.lineTo(ex - 12 * Math.cos(arrowAngle - 0.4), ey - 12 * Math.sin(arrowAngle - 0.4));
+  ctx.lineTo(ex - 12 * Math.cos(arrowAngle + 0.4), ey - 12 * Math.sin(arrowAngle + 0.4));
+  ctx.closePath();
+  ctx.fill();
 
   ctx.restore();
 }
