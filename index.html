@@ -224,6 +224,11 @@ const CAR_H = 70;   // car length (long side)
 // ↑ (forward): speed > 0 → moves in facing direction
 // ↓ (reverse): speed < 0 → moves backward
 
+// ====== CONSTANTS ======
+const PI = Math.PI;
+const PI2 = Math.PI / 2;
+const PI4 = Math.PI / 4;
+
 // ====== LEVELS ======
 // All carStart angles use our system: 0=up, PI/2=right, PI=down, -PI/2=left
 // For parallel parking (horizontal cars), targetAngle = PI/2 (facing right) or -PI/2 (facing left)
@@ -773,11 +778,6 @@ function showNotification(text) {
   el.style.animation = 'fadeInOut 3s ease-in-out forwards';
   setTimeout(() => { el.style.display = 'none'; }, 3000);
 }
-
-// ====== CONSTANTS shorthand ======
-const PI = Math.PI;
-const PI2 = Math.PI / 2;
-const PI4 = Math.PI / 4;
 
 // Polyfill roundRect
 if (!CanvasRenderingContext2D.prototype.roundRect) {
