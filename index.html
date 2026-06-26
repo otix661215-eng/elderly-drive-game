@@ -636,16 +636,23 @@ const LEVELS = [
     // Level 11: S型彎道停車 - cones form an S-curve to the spot
     name: "S型彎道停車",
     desc: "繞過三角錐抵達車位",
-    carStart: { x: 120, y: 460, angle: PI2 },
-    spot: { cx: 650, cy: 130, w: CAR_W+12, h: CAR_H+10, angle: 0, type: 'forward' },
+    carStart: { x: 100, y: 470, angle: 0 },
+    spot: { cx: 660, cy: 130, w: CAR_W+12, h: CAR_H+10, angle: 0, type: 'forward' },
     obstacles: [
       { cx: 590, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#d63031' },
-      { cx: 710, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#2d3436' },
-      { cx: 280, cy: 380, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 280, cy: 250, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 450, cy: 330, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 450, cy: 200, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
-      { cx: 550, cy: 280, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 720, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#2d3436' },
+      // S-curve cones - left side of first bend
+      { cx: 150, cy: 370, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 150, cy: 280, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      // right side of first bend (forces car left)
+      { cx: 280, cy: 420, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 280, cy: 330, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      // center of S - right side of second bend (forces car right)
+      { cx: 400, cy: 280, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 400, cy: 190, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      // left side of second bend
+      { cx: 530, cy: 230, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 530, cy: 150, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
     ],
     walls: [
       { x: 0, y: 520, w: W, h: 80 },
@@ -1208,40 +1215,48 @@ function drawRoadMarkings() {
   } else if (level.spot.type === 'perpendicular' || level.spot.type === 'forward') {
     if (currentLevel === 10) {
       // S-curve lane for level 11
-      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      // Path: start (100,470) → bend left around x=150 cones → bend right around x=400 cones → straight to spot (660,130)
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
       ctx.lineWidth = 4;
       ctx.setLineDash([18, 12]);
       // S-curve center line
       ctx.beginPath();
-      ctx.moveTo(150, H - 90);
-      ctx.bezierCurveTo(250, H - 200, 350, 350, 450, 280);
-      ctx.bezierCurveTo(550, 210, 580, 180, 650, 100);
+      ctx.moveTo(100, 480);
+      ctx.bezierCurveTo(210, 470, 220, 320, 215, 250);
+      ctx.bezierCurveTo(210, 180, 350, 230, 470, 220);
+      ctx.bezierCurveTo(540, 215, 600, 180, 660, 150);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Solid edge lines on both sides of the S-curve
+      // Solid edge lines
       ctx.strokeStyle = 'rgba(255,255,255,0.2)';
       ctx.lineWidth = 2;
       // Left edge
       ctx.beginPath();
-      ctx.moveTo(120, H - 90);
-      ctx.bezierCurveTo(220, H - 200, 320, 350, 420, 280);
-      ctx.bezierCurveTo(520, 210, 550, 180, 620, 100);
+      ctx.moveTo(80, 480);
+      ctx.bezierCurveTo(180, 470, 185, 340, 180, 260);
+      ctx.bezierCurveTo(175, 170, 340, 250, 460, 245);
+      ctx.bezierCurveTo(540, 240, 605, 190, 660, 160);
       ctx.stroke();
       // Right edge
       ctx.beginPath();
-      ctx.moveTo(180, H - 90);
-      ctx.bezierCurveTo(280, H - 200, 380, 350, 480, 280);
-      ctx.bezierCurveTo(580, 210, 610, 180, 680, 100);
+      ctx.moveTo(220, 480);
+      ctx.bezierCurveTo(250, 470, 255, 340, 250, 250);
+      ctx.bezierCurveTo(245, 170, 370, 210, 480, 200);
+      ctx.bezierCurveTo(550, 195, 610, 165, 670, 140);
       ctx.stroke();
 
-      // Direction arrows along the curve
-      ctx.fillStyle = 'rgba(255,255,255,0.25)';
-      ctx.font = '18px sans-serif';
+      // Direction arrows along the S-curve
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.font = 'bold 20px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('↗', 260, H - 150);
-      ctx.fillText('↗', 430, 320);
-      ctx.fillText('↑', 600, 150);
+      ctx.fillText('↑', 100, 450);
+      ctx.fillText('↗', 210, 350);
+      ctx.fillText('↑', 215, 230);
+      ctx.fillText('↖', 340, 240);
+      ctx.fillText('↑', 470, 200);
+      ctx.fillText('↗', 580, 180);
+      ctx.fillText('↑', 650, 160);
     } else {
       // Parking garage: draw parking row lines
       ctx.strokeStyle = 'rgba(255,255,255,0.25)';
