@@ -3729,21 +3729,6 @@ function drawCar(cx, cy, w, h, angle, color, isPlayer) {
 
 function drawRoadMarkings() {
   ctx.save();
-
-  if (currentLevel === 10) {
-    // S-curve: dashed center line only
-    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-    ctx.lineWidth = 4;
-    ctx.setLineDash([18, 12]);
-    ctx.beginPath();
-    ctx.moveTo(100, 480);
-    ctx.bezierCurveTo(210, 470, 220, 320, 215, 250);
-    ctx.bezierCurveTo(210, 180, 350, 230, 470, 220);
-    ctx.bezierCurveTo(540, 215, 600, 180, 660, 150);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-
   ctx.restore();
 }
 
