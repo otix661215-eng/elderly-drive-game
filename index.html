@@ -154,7 +154,31 @@
     </button>
     <button class="level-btn l6" onclick="startLevel(5)">
       <span class="num">6️⃣</span>
-      <span class="info"><div class="title">綜合挑戰</div><div class="desc">連續完成停車</div></span>
+      <span class="info"><div class="title">綜合挑戰</div><div class="desc">障礙物更多的小路停車</div></span>
+    </button>
+    <button class="level-btn l1" onclick="startLevel(6)">
+      <span class="num">7️⃣</span>
+      <span class="info"><div class="title">雙排倒車</div><div class="desc">兩側都是車，倒車入庫</div></span>
+    </button>
+    <button class="level-btn l2" onclick="startLevel(7)">
+      <span class="num">8️⃣</span>
+      <span class="info"><div class="title">三角錐挑戰</div><div class="desc">三角錐圍繞的路邊停車</div></span>
+    </button>
+    <button class="level-btn l3" onclick="startLevel(8)">
+      <span class="num">9️⃣</span>
+      <span class="info"><div class="title">地下停車場</div><div class="desc">狹窄通道倒車入庫</div></span>
+    </button>
+    <button class="level-btn l4" onclick="startLevel(9)">
+      <span class="num">🔟</span>
+      <span class="info"><div class="title">反向路邊停車</div><div class="desc">從右側停入左側車位</div></span>
+    </button>
+    <button class="level-btn l5" onclick="startLevel(10)">
+      <span class="num">1️⃣1️⃣</span>
+      <span class="info"><div class="title">S型彎道停車</div><div class="desc">繞過三角錐抵達車位</div></span>
+    </button>
+    <button class="level-btn l6" onclick="startLevel(11)">
+      <span class="num">1️⃣2️⃣</span>
+      <span class="info"><div class="title">最終挑戰</div><div class="desc">所有技巧的綜合考驗</div></span>
     </button>
     <div class="controls-hint">
       ⌨️ ↑前進 ↓倒車 ←→ 轉向<br>
@@ -309,7 +333,7 @@ const LEVELS = [
     targetAngle: PI2,
   },
   {
-    // Level 6: 綜合挑戰
+    // Level 6: 綜合挑戰 - more obstacles
     name: "綜合挑戰",
     desc: "障礙物更多的小路停車",
     carStart: { x: 130, y: 430, angle: PI2 },
@@ -325,6 +349,126 @@ const LEVELS = [
       { x: 0, y: 520, w: W, h: 80 },
       { x: 0, y: 0, w: 15, h: H },
       { x: W-15, y: 0, w: 15, h: H },
+    ],
+    targetAngle: PI2,
+  },
+  {
+    // Level 7: 雙排倒車 - reverse into spot between tight cars on both sides
+    name: "雙排倒車",
+    desc: "兩側都是車，倒車入庫",
+    carStart: { x: 400, y: 460, angle: PI },
+    spot: { cx: 400, cy: 160, w: CAR_W+12, h: CAR_H+10, angle: 0, type: 'perpendicular' },
+    obstacles: [
+      { cx: 290, cy: 160, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
+      { cx: 510, cy: 160, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#e84393' },
+      { cx: 200, cy: 460, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#fdcb6e' },
+      { cx: 600, cy: 460, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#6c5ce7' },
+    ],
+    walls: [
+      { x: 0, y: 0, w: W, h: 50 },
+      { x: 0, y: 520, w: W, h: 80 },
+    ],
+    targetAngle: PI,
+  },
+  {
+    // Level 8: 殘障車位 - wide spot but angled approach with cones
+    name: "三角錐挑戰",
+    desc: "三角錐圍繞的路邊停車",
+    carStart: { x: 120, y: 430, angle: PI2 },
+    spot: { cx: 520, cy: 430, w: 110, h: CAR_W+10, angle: PI2, type: 'parallel' },
+    obstacles: [
+      { cx: 400, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
+      { cx: 640, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
+      { cx: 280, cy: 380, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 280, cy: 480, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 350, cy: 350, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 720, cy: 380, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 720, cy: 480, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+    ],
+    walls: [{ x: 0, y: 520, w: W, h: 80 }],
+    targetAngle: PI2,
+  },
+  {
+    // Level 9: 地下停車場 - narrow passage with cars on both sides
+    name: "地下停車場",
+    desc: "狹窄通道倒車入庫",
+    carStart: { x: 400, y: 460, angle: PI },
+    spot: { cx: 400, cy: 130, w: CAR_W+10, h: CAR_H+10, angle: 0, type: 'perpendicular' },
+    obstacles: [
+      { cx: 290, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
+      { cx: 510, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#e84393' },
+      { cx: 150, cy: 300, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#fdcb6e' },
+      { cx: 650, cy: 300, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#6c5ce7' },
+      { cx: 150, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#e17055' },
+      { cx: 650, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#0984e3' },
+    ],
+    walls: [
+      { x: 0, y: 0, w: W, h: 50 },
+      { x: 0, y: 520, w: W, h: 80 },
+      { x: 0, y: 0, w: 15, h: H },
+      { x: W-15, y: 0, w: 15, h: H },
+    ],
+    targetAngle: PI,
+  },
+  {
+    // Level 10: 坡道停車 - angled parking on a slope (visual slope via rotated spots)
+    name: "反向路邊停車",
+    desc: "從右側停入左側車位",
+    carStart: { x: 650, y: 430, angle: -PI2 }, // facing LEFT
+    spot: { cx: 340, cy: 430, w: 105, h: CAR_W+10, angle: -PI2, type: 'parallel' },
+    obstacles: [
+      { cx: 210, cy: 430, w: CAR_W, h: CAR_H, angle: -PI2, type: 'car', color: '#00cec9' },
+      { cx: 470, cy: 430, w: CAR_W, h: CAR_H, angle: -PI2, type: 'car', color: '#e17055' },
+      { cx: 560, cy: 300, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 180, cy: 250, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+    ],
+    walls: [{ x: 0, y: 520, w: W, h: 80 }],
+    targetAngle: -PI2,
+  },
+  {
+    // Level 11: S型彎道停車 - cones form an S-curve to the spot
+    name: "S型彎道停車",
+    desc: "繞過三角錐抵達車位",
+    carStart: { x: 120, y: 460, angle: PI2 },
+    spot: { cx: 650, cy: 130, w: CAR_W+12, h: CAR_H+10, angle: 0, type: 'forward' },
+    obstacles: [
+      { cx: 590, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#d63031' },
+      { cx: 710, cy: 130, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#2d3436' },
+      { cx: 280, cy: 380, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 280, cy: 250, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 450, cy: 330, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 450, cy: 200, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 550, cy: 280, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+    ],
+    walls: [
+      { x: 0, y: 520, w: W, h: 80 },
+      { x: 0, y: 0, w: W, h: 45 },
+    ],
+    targetAngle: 0,
+  },
+  {
+    // Level 12: 最終挑戰 - tight spot, cones everywhere, walls on sides
+    name: "最終挑戰",
+    desc: "所有技巧的綜合考驗",
+    carStart: { x: 120, y: 460, angle: PI2 },
+    spot: { cx: 620, cy: 430, w: 88, h: CAR_W+8, angle: PI2, type: 'parallel' },
+    obstacles: [
+      { cx: 500, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
+      { cx: 720, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
+      { cx: 350, cy: 380, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 350, cy: 480, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 250, cy: 300, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 550, cy: 300, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 400, cy: 200, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 680, cy: 250, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 150, cy: 200, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#6c5ce7' },
+      { cx: 680, cy: 150, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
+    ],
+    walls: [
+      { x: 0, y: 520, w: W, h: 80 },
+      { x: 0, y: 0, w: 15, h: H },
+      { x: W-15, y: 0, w: 15, h: H },
+      { x: 0, y: 0, w: W, h: 45 },
     ],
     targetAngle: PI2,
   },
