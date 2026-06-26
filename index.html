@@ -195,6 +195,7 @@
     <h1>🅿️ 銀髮停車樂</h1>
     <div class="subtitle">慢慢來，停好就好</div>
     <div id="levelList"></div>
+    <div id="pageNav" style="display:flex;gap:8px;justify-content:center;margin-top:15px;flex-wrap:wrap;"></div>
     <div class="controls-hint">
       ⌨️ 鍵盤：↑前進 ↓倒車 ←→ 轉向<br>
       📱 手機：左邊方向盤轉向，右邊踏板控制<br>
@@ -3192,23 +3193,55 @@ const LEVELS = [
   },
 ];
 
-// Generate level buttons dynamically
+// Generate level buttons with pagination - 10 per page
 (function() {
   const list = document.getElementById('levelList');
+  const pageNav = document.getElementById('pageNav');
   if (!list) return;
+  const PER_PAGE = 10;
+  const totalPages = Math.ceil(LEVELS.length / PER_PAGE);
   const colorClasses = ['l1','l2','l3','l4','l5','l6'];
-  const numEmojis = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
-  for (let i = 0; i < LEVELS.length; i++) {
-    const btn = document.createElement('button');
-    btn.className = 'level-btn ' + colorClasses[i % 6];
-    btn.onclick = () => startLevel(i);
-    const lv = LEVELS[i];
-    const num = i < 10 ? numEmojis[i] : (i + 1);
-    btn.innerHTML = '<span class="num">' + num + '</span>' +
-      '<span class="info"><div class="title">' + lv.name + '</div>' +
-      '<div class="desc">' + lv.desc + '</div></span>';
-    list.appendChild(btn);
+  let currentPage = 0;
+
+  function renderPage(page) {
+    currentPage = page;
+    list.innerHTML = '';
+    const start = page * PER_PAGE;
+    const end = Math.min(start + PER_PAGE, LEVELS.length);
+    for (let i = start; i < end; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'level-btn ' + colorClasses[i % 6];
+      btn.onclick = () => startLevel(i);
+      const lv = LEVELS[i];
+      btn.innerHTML = '<span class="num">' + (i + 1) + '</span>' +
+        '<span class="info"><div class="title">' + lv.name + '</div>' +
+        '<div class="desc">' + lv.desc + '</div></span>';
+      list.appendChild(btn);
+    }
+    renderPageNav();
   }
+
+  function renderPageNav() {
+    pageNav.innerHTML = '';
+    for (let p = 0; p < totalPages; p++) {
+      const btn = document.createElement('button');
+      btn.textContent = (p + 1);
+      btn.style.cssText = 'width:40px;height:40px;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;font-family:inherit;transition:transform 0.15s;';
+      if (p === currentPage) {
+        btn.style.background = '#ffeaa7';
+        btn.style.color = '#2d3436';
+      } else {
+        btn.style.background = 'rgba(255,255,255,0.2)';
+        btn.style.color = '#fff';
+      }
+      btn.onclick = () => renderPage(p);
+      btn.onmouseenter = () => { if (p !== currentPage) btn.style.background = 'rgba(255,255,255,0.35)'; };
+      btn.onmouseleave = () => { if (p !== currentPage) btn.style.background = 'rgba(255,255,255,0.2)'; };
+      pageNav.appendChild(btn);
+    }
+  }
+
+  renderPage(0);
 })();
 
 // ====== INIT ======
