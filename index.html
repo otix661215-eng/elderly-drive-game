@@ -19,14 +19,12 @@
   }
   canvas { display: block; width: 100%; height: 100%; border-radius: 12px; }
 
-  /* Start Screen */
   #startScreen {
     position: absolute; inset: 0;
     background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    border-radius: 12px; z-index: 10; overflow-y: auto;
-    padding: 20px;
+    border-radius: 12px; z-index: 10; overflow-y: auto; padding: 20px;
   }
   #startScreen h1 { font-size: 48px; color: #fff; text-shadow: 3px 3px 6px rgba(0,0,0,0.4); margin-bottom: 6px; }
   #startScreen .subtitle { font-size: 20px; color: #ffeaa7; margin-bottom: 25px; }
@@ -36,8 +34,7 @@
     margin: 5px 0; font-size: 18px;
     border: none; border-radius: 14px;
     cursor: pointer; font-family: inherit;
-    transition: transform 0.15s, box-shadow 0.15s;
-    color: #fff; text-align: left;
+    transition: transform 0.15s; color: #fff; text-align: left;
   }
   .level-btn:hover { transform: scale(1.03); }
   .level-btn:active { transform: scale(0.97); }
@@ -45,7 +42,6 @@
   .level-btn .info { flex-grow: 1; }
   .level-btn .info .title { font-weight: bold; font-size: 19px; }
   .level-btn .info .desc { font-size: 14px; opacity: 0.85; }
-  .level-btn.locked { opacity: 0.4; cursor: not-allowed; }
   .level-btn.l1 { background: linear-gradient(135deg, #00b894, #00cec9); }
   .level-btn.l2 { background: linear-gradient(135deg, #0984e3, #74b9ff); }
   .level-btn.l3 { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
@@ -53,46 +49,38 @@
   .level-btn.l5 { background: linear-gradient(135deg, #d63031, #e84393); }
   .level-btn.l6 { background: linear-gradient(135deg, #2d3436, #636e72); }
   .controls-hint { margin-top: 20px; color: #dfe6e9; font-size: 15px; text-align: center; line-height: 1.7; }
-  .stars-display { font-size: 20px; }
 
-  /* HUD */
   #hud {
     position: absolute; top: 10px; left: 10px; right: 10px;
-    display: none; justify-content: space-between;
-    pointer-events: none; z-index: 5;
+    display: none; justify-content: space-between; pointer-events: none; z-index: 5;
   }
-  .hud-box {
-    background: rgba(0,0,0,0.55); color: #fff;
-    padding: 8px 16px; border-radius: 10px;
-    font-size: 18px; font-weight: bold;
-  }
+  .hud-box { background: rgba(0,0,0,0.55); color: #fff; padding: 8px 16px; border-radius: 10px; font-size: 18px; font-weight: bold; }
 
-  /* Mobile Controls */
   #mobileControls {
     position: absolute; bottom: 10px; left: 10px; right: 10px;
-    display: none; justify-content: space-between; z-index: 5;
+    display: none; justify-content: center; z-index: 5;
   }
   .mobile-btn {
-    width: 70px; height: 70px;
+    width: 64px; height: 64px;
     background: rgba(255,255,255,0.25);
     border: 3px solid rgba(255,255,255,0.5);
-    border-radius: 50%; color: #fff;
-    font-size: 30px; display: flex;
-    align-items: center; justify-content: center;
+    border-radius: 50%; color: #fff; font-size: 28px;
+    display: flex; align-items: center; justify-content: center;
     cursor: pointer; user-select: none; -webkit-user-select: none;
   }
   .mobile-btn:active { background: rgba(255,255,255,0.45); }
-  .mobile-group { display: flex; gap: 8px; flex-direction: column; align-items: center; }
-  .mobile-row { display: flex; gap: 8px; }
+  .mobile-layout { display: grid; grid-template-columns: 64px 64px 64px; grid-template-rows: 64px 64px; gap: 6px; justify-content: center; }
+  .mobile-layout .btn-up { grid-column: 2; grid-row: 1; }
+  .mobile-layout .btn-left { grid-column: 1; grid-row: 2; }
+  .mobile-layout .btn-down { grid-column: 2; grid-row: 2; }
+  .mobile-layout .btn-right { grid-column: 3; grid-row: 2; }
 
-  /* Notification */
   #notification {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(0,0,0,0.85); color: #ffeaa7;
     padding: 20px 40px; border-radius: 16px;
-    font-size: 24px; text-align: center;
-    display: none; z-index: 6;
+    font-size: 24px; text-align: center; display: none; z-index: 6;
     animation: fadeInOut 3s ease-in-out forwards;
   }
   @keyframes fadeInOut {
@@ -102,10 +90,8 @@
     100% { opacity: 0; }
   }
 
-  /* Result Screen */
   #resultScreen {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,0.8);
+    position: absolute; inset: 0; background: rgba(0,0,0,0.8);
     display: none; flex-direction: column;
     align-items: center; justify-content: center;
     border-radius: 12px; z-index: 9;
@@ -115,17 +101,14 @@
   #resultScreen .stats { color: #dfe6e9; font-size: 18px; margin-bottom: 25px; text-align: center; line-height: 1.8; }
   #resultScreen button {
     padding: 12px 36px; font-size: 20px;
-    border: none; border-radius: 12px;
-    cursor: pointer; margin: 5px; font-family: inherit;
+    border: none; border-radius: 12px; cursor: pointer; margin: 5px; font-family: inherit;
   }
   #retryBtn { background: #00b894; color: #fff; }
   #nextBtn { background: #6c5ce7; color: #fff; }
   #backBtn { background: #636e72; color: #fff; }
 
-  /* Pause */
   #pauseOverlay {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,0.6);
+    position: absolute; inset: 0; background: rgba(0,0,0,0.6);
     display: none; flex-direction: column;
     align-items: center; justify-content: center;
     border-radius: 12px; z-index: 8;
@@ -133,8 +116,7 @@
   #pauseOverlay h2 { color: #fff; font-size: 42px; margin-bottom: 20px; }
   #pauseOverlay button {
     padding: 14px 40px; font-size: 22px;
-    border: none; border-radius: 12px;
-    cursor: pointer; margin: 6px; font-family: inherit;
+    border: none; border-radius: 12px; cursor: pointer; margin: 6px; font-family: inherit;
   }
   #resumeBtn { background: #00b894; color: #fff; }
   #quitBtn { background: #d63031; color: #fff; }
@@ -170,10 +152,10 @@
     </button>
     <button class="level-btn l6" onclick="startLevel(5)">
       <span class="num">6️⃣</span>
-      <span class="info"><div class="title">綜合挑戰</div><div class="desc">連續完成3種停車</div></span>
+      <span class="info"><div class="title">綜合挑戰</div><div class="desc">連續完成停車</div></span>
     </button>
     <div class="controls-hint">
-      ⌨️ 方向鍵控制：↑前進 ↓倒車 ←→ 轉向<br>
+      ⌨️ ↑前進 ↓倒車 ←→ 轉向<br>
       📱 手機：下方按鈕操作<br>
       🔇 撞到也沒關係，慢慢來就好！
     </div>
@@ -186,15 +168,11 @@
   </div>
 
   <div id="mobileControls">
-    <div class="mobile-group">
-      <div class="mobile-row">
-        <div class="mobile-btn" id="btnUp" ontouchstart="mobileUp=true" ontouchend="mobileUp=false" onmousedown="mobileUp=true" onmouseup="mobileUp=false">⬆️</div>
-      </div>
-      <div class="mobile-row">
-        <div class="mobile-btn" id="btnLeft" ontouchstart="mobileLeft=true" ontouchend="mobileLeft=false" onmousedown="mobileLeft=true" onmouseup="mobileLeft=false">⬅️</div>
-        <div class="mobile-btn" id="btnDown" ontouchstart="mobileDown=true" ontouchend="mobileDown=false" onmousedown="mobileDown=true" onmouseup="mobileDown=false">⬇️</div>
-        <div class="mobile-btn" id="btnRight" ontouchstart="mobileRight=true" ontouchend="mobileRight=false" onmousedown="mobileRight=true" onmouseup="mobileRight=false">➡️</div>
-      </div>
+    <div class="mobile-layout">
+      <div class="mobile-btn btn-up" ontouchstart="mobileUp=true" ontouchend="mobileUp=false" onmousedown="mobileUp=true" onmouseup="mobileUp=false">⬆️</div>
+      <div class="mobile-btn btn-left" ontouchstart="mobileLeft=true" ontouchend="mobileLeft=false" onmousedown="mobileLeft=true" onmouseup="mobileLeft=false">⬅️</div>
+      <div class="mobile-btn btn-down" ontouchstart="mobileDown=true" ontouchend="mobileDown=false" onmousedown="mobileDown=true" onmouseup="mobileDown=false">⬇️</div>
+      <div class="mobile-btn btn-right" ontouchstart="mobileRight=true" ontouchend="mobileRight=false" onmousedown="mobileRight=true" onmouseup="mobileRight=false">➡️</div>
     </div>
   </div>
 
@@ -229,101 +207,119 @@ let mobileUp=false, mobileDown=false, mobileLeft=false, mobileRight=false;
 
 // Game state
 let running=false, paused=false, frameCount=0, currentLevel=0;
-let car, level, startTime, hits, parked, parkTimer, result;
+let car, level, startTime, hits, parked, parkTimer;
 let obstacles = [], parkingSpot, particles = [];
 
+// ====== CAR DIMENSIONS (shared) ======
+const CAR_W = 40;   // car width (short side)
+const CAR_H = 70;   // car length (long side)
+
+// ====== ANGLE SYSTEM ======
+// angle = 0 → car faces UP (north), -Y direction
+// angle = PI/2 → car faces RIGHT, +X direction
+// angle = PI → car faces DOWN, +Y direction
+// angle = -PI/2 → car faces LEFT, -X direction
+//
+// Movement: dx = sin(angle) * speed, dy = -cos(angle) * speed
+// ↑ (forward): speed > 0 → moves in facing direction
+// ↓ (reverse): speed < 0 → moves backward
+
 // ====== LEVELS ======
+// All carStart angles use our system: 0=up, PI/2=right, PI=down, -PI/2=left
+// For parallel parking (horizontal cars), targetAngle = PI/2 (facing right) or -PI/2 (facing left)
+// For perpendicular parking (vertical cars), targetAngle = 0 (facing up) or PI (facing down)
+
 const LEVELS = [
   {
+    // Level 1: 路邊停車 - car drives from left, parks between two cars on the right side
     name: "路邊停車",
     desc: "平行停入路邊車位",
-    carStart: { x: 150, y: 480, angle: 0 },
-    spot: { x: 480, y: 460, w: 110, h: 55, angle: 0, type: 'parallel' },
+    carStart: { x: 150, y: 430, angle: PI2 }, // facing right, driving along road
+    spot: { cx: 460, cy: 430, w: 105, h: CAR_W+10, angle: PI2, type: 'parallel' },
     obstacles: [
-      { x: 350, y: 455, w: 70, h: 55, type: 'car', color: '#e17055' },
-      { x: 620, y: 455, w: 70, h: 55, type: 'car', color: '#0984e3' },
+      { cx: 330, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#e17055' },
+      { cx: 570, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#0984e3' },
     ],
-    walls: [
-      { x: 0, y: 520, w: W, h: 80 }, // bottom curb
-    ],
-    targetAngle: 0,
+    walls: [{ x: 0, y: 520, w: W, h: 80 }],
+    targetAngle: PI2, // face right
   },
   {
+    // Level 2: 倒車入庫 - car at bottom, reverse into top spot
     name: "倒車入庫",
     desc: "垂直倒車停入車位",
-    carStart: { x: 400, y: 480, angle: -Math.PI/2 },
-    spot: { x: 340, y: 120, w: 80, h: 120, angle: -Math.PI/2, type: 'perpendicular' },
+    carStart: { x: 400, y: 450, angle: 0 }, // facing up
+    spot: { cx: 400, cy: 140, w: CAR_W+15, h: CAR_H+10, angle: 0, type: 'perpendicular' },
     obstacles: [
-      { x: 260, y: 110, w: 75, h: 120, type: 'car', color: '#00b894' },
-      { x: 425, y: 110, w: 75, h: 120, type: 'car', color: '#e84393' },
+      { cx: 300, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#00b894' },
+      { cx: 500, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#e84393' },
     ],
     walls: [
-      { x: 0, y: 0, w: W, h: 60 }, // top wall
-      { x: 0, y: 520, w: W, h: 80 }, // bottom
+      { x: 0, y: 0, w: W, h: 50 },
+      { x: 0, y: 520, w: W, h: 80 },
     ],
-    targetAngle: -Math.PI/2,
+    targetAngle: 0, // face up
   },
   {
+    // Level 3: 前進停車 - car at bottom, drive forward into top spot
     name: "前進停車",
     desc: "正向開進車位",
-    carStart: { x: 400, y: 480, angle: -Math.PI/2 },
-    spot: { x: 340, y: 120, w: 80, h: 120, angle: -Math.PI/2, type: 'forward' },
+    carStart: { x: 400, y: 450, angle: 0 }, // facing up
+    spot: { cx: 400, cy: 140, w: CAR_W+15, h: CAR_H+10, angle: PI, type: 'forward' },
     obstacles: [
-      { x: 260, y: 110, w: 75, h: 120, type: 'car', color: '#fdcb6e' },
-      { x: 425, y: 110, w: 75, h: 120, type: 'car', color: '#6c5ce7' },
+      { cx: 300, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#fdcb6e' },
+      { cx: 500, cy: 140, w: CAR_W, h: CAR_H, angle: 0, type: 'car', color: '#6c5ce7' },
     ],
     walls: [
-      { x: 0, y: 0, w: W, h: 60 },
+      { x: 0, y: 0, w: W, h: 50 },
       { x: 0, y: 520, w: W, h: 80 },
     ],
-    targetAngle: -Math.PI/2,
+    targetAngle: PI, // face down (drove in forward, so nose points away from entrance)
   },
   {
+    // Level 4: 斜向停車 - 45 degree angle
     name: "斜向停車",
     desc: "45度斜角停入",
-    carStart: { x: 150, y: 480, angle: 0 },
-    spot: { x: 400, y: 380, w: 100, h: 70, angle: -Math.PI/4, type: 'diagonal' },
+    carStart: { x: 120, y: 450, angle: PI2 }, // facing right
+    spot: { cx: 420, cy: 400, w: 95, h: CAR_W+10, angle: PI2 + PI4, type: 'diagonal' },
     obstacles: [
-      { x: 300, y: 370, w: 75, h: 55, type: 'car', color: '#00cec9', angle: -Math.PI/4 },
-      { x: 530, y: 340, w: 75, h: 55, type: 'car', color: '#e17055', angle: -Math.PI/4 },
+      { cx: 310, cy: 380, w: CAR_W, h: CAR_H, angle: PI2 + PI4, type: 'car', color: '#00cec9' },
+      { cx: 540, cy: 350, w: CAR_W, h: CAR_H, angle: PI2 + PI4, type: 'car', color: '#e17055' },
     ],
-    walls: [
-      { x: 0, y: 520, w: W, h: 80 },
-    ],
-    targetAngle: -Math.PI/4,
+    walls: [{ x: 0, y: 520, w: W, h: 80 }],
+    targetAngle: PI2 + PI4, // 45 degrees
   },
   {
+    // Level 5: 狹窄車位 - tight parallel parking
     name: "狹窄車位",
     desc: "空間很小，慢慢來",
-    carStart: { x: 200, y: 480, angle: 0 },
-    spot: { x: 500, y: 455, w: 85, h: 55, angle: 0, type: 'parallel' },
+    carStart: { x: 130, y: 430, angle: PI2 },
+    spot: { cx: 500, cy: 430, w: 82, h: CAR_W+8, angle: PI2, type: 'parallel' },
     obstacles: [
-      { x: 390, y: 455, w: 65, h: 55, type: 'car', color: '#d63031' },
-      { x: 610, y: 455, w: 65, h: 55, type: 'car', color: '#2d3436' },
-      { x: 700, y: 455, w: 65, h: 55, type: 'car', color: '#fdcb6e' },
+      { cx: 390, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#d63031' },
+      { cx: 590, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#2d3436' },
     ],
-    walls: [
-      { x: 0, y: 520, w: W, h: 80 },
-    ],
-    targetAngle: 0,
+    walls: [{ x: 0, y: 520, w: W, h: 80 }],
+    targetAngle: PI2,
   },
   {
+    // Level 6: 綜合挑戰
     name: "綜合挑戰",
-    desc: "連續完成3種停車",
-    carStart: { x: 150, y: 480, angle: 0 },
-    spot: { x: 480, y: 460, w: 105, h: 55, angle: 0, type: 'parallel' },
+    desc: "障礙物更多的小路停車",
+    carStart: { x: 130, y: 430, angle: PI2 },
+    spot: { cx: 480, cy: 430, w: 95, h: CAR_W+10, angle: PI2, type: 'parallel' },
     obstacles: [
-      { x: 350, y: 455, w: 70, h: 55, type: 'car', color: '#e17055' },
-      { x: 620, y: 455, w: 70, h: 55, type: 'car', color: '#0984e3' },
-      { x: 100, y: 300, w: 70, h: 55, type: 'cone', color: '#fdcb6e' },
-      { x: 700, y: 250, w: 70, h: 55, type: 'cone', color: '#fdcb6e' },
+      { cx: 350, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#e17055' },
+      { cx: 600, cy: 430, w: CAR_W, h: CAR_H, angle: PI2, type: 'car', color: '#0984e3' },
+      { cx: 250, cy: 280, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 650, cy: 250, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
+      { cx: 100, cy: 200, w: 0, h: 0, type: 'cone', color: '#fdcb6e' },
     ],
     walls: [
       { x: 0, y: 520, w: W, h: 80 },
-      { x: 0, y: 0, w: 20, h: H },
-      { x: W-20, y: 0, w: 20, h: H },
+      { x: 0, y: 0, w: 15, h: H },
+      { x: W-15, y: 0, w: 15, h: H },
     ],
-    targetAngle: 0,
+    targetAngle: PI2,
   },
 ];
 
@@ -332,7 +328,7 @@ function startLevel(idx) {
   currentLevel = idx;
   level = LEVELS[idx];
   running = true; paused = false; frameCount = 0;
-  hits = 0; parked = false; parkTimer = 0; result = null;
+  hits = 0; parked = false; parkTimer = 0;
   startTime = Date.now();
   particles = [];
 
@@ -341,22 +337,23 @@ function startLevel(idx) {
     y: level.carStart.y,
     angle: level.carStart.angle,
     speed: 0,
-    maxSpeed: 2.5,
-    maxReverse: 1.5,
-    accel: 0.06,
+    maxSpeed: 2.2,
+    maxReverse: 1.3,
+    accel: 0.05,
     decel: 0.04,
-    turnSpeed: 0.025,
-    width: 44,
-    height: 75,
+    turnSpeed: 0.022,
+    width: CAR_W,
+    height: CAR_H,
   };
 
   parkingSpot = level.spot;
-  obstacles = JSON.parse(JSON.stringify(level.obstacles));
+  obstacles = level.obstacles.map(o => ({...o}));
 
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('resultScreen').style.display = 'none';
   document.getElementById('hud').style.display = 'flex';
   document.getElementById('hudLevel').textContent = `🅿️ 關卡 ${idx+1}：${level.name}`;
+  document.getElementById('hudHits').textContent = `💥 0`;
 
   if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
     document.getElementById('mobileControls').style.display = 'flex';
@@ -394,49 +391,52 @@ function update(dt) {
   const left = keys['ArrowLeft'] || keys['a'] || keys['A'] || mobileLeft;
   const right = keys['ArrowRight'] || keys['d'] || keys['D'] || mobileRight;
 
-  // Acceleration
+  // Acceleration: ↑ = forward (positive speed), ↓ = reverse (negative speed)
   if (up) car.speed = Math.min(car.maxSpeed, car.speed + car.accel * dt);
   else if (down) car.speed = Math.max(-car.maxReverse, car.speed - car.accel * dt);
   else {
-    // Natural deceleration
     if (car.speed > 0) car.speed = Math.max(0, car.speed - car.decel * dt);
     else if (car.speed < 0) car.speed = Math.min(0, car.speed + car.decel * dt);
   }
 
-  // Steering - only when moving
+  // Steering - only when moving; ← turns left (counterclockwise = angle decreases)
   if (Math.abs(car.speed) > 0.05) {
-    const turnFactor = car.speed > 0 ? 1 : -1; // reverse steering when reversing
+    const turnFactor = car.speed > 0 ? 1 : -1; // reverse steering when going backward
     if (left) car.angle -= car.turnSpeed * dt * turnFactor;
     if (right) car.angle += car.turnSpeed * dt * turnFactor;
   }
 
-  // Move car
-  const dx = Math.cos(car.angle) * car.speed * dt;
-  const dy = Math.sin(car.angle) * car.speed * dt;
+  // Move car using our angle system: angle=0 → up, angle=PI/2 → right
+  const dx = Math.sin(car.angle) * car.speed * dt;
+  const dy = -Math.cos(car.angle) * car.speed * dt;
   car.x += dx;
   car.y += dy;
 
-  // Boundary checks (keep car on screen)
-  car.x = Math.max(30, Math.min(W - 30, car.x));
-  car.y = Math.max(30, Math.min(H - 30, car.y));
+  // Boundary
+  car.x = Math.max(25, Math.min(W - 25, car.x));
+  car.y = Math.max(25, Math.min(H - 25, car.y));
 
-  // Collision detection with obstacles
+  // Collision with obstacles
   for (const obs of obstacles) {
-    if (checkCollision(car, obs)) {
-      // Gentle bump - push back and count hit
+    if (obs.type === 'cone') {
+      const dist = Math.hypot(car.x - obs.cx, car.y - obs.cy);
+      if (dist < 28) {
+        car.speed *= -0.3;
+        car.x -= dx * 1.5; car.y -= dy * 1.5;
+        if (frameCount % 20 < 2) { hits++; updateHits(); }
+      }
+      continue;
+    }
+    if (checkCarCollision(car, obs)) {
       car.speed *= -0.3;
-      car.x -= dx * 1.5;
-      car.y -= dy * 1.5;
-      if (frameCount % 20 < 2) { // throttle hit counting
-        hits++;
-        document.getElementById('hudHits').textContent = `💥 ${hits}`;
-        // Small particle effect
+      car.x -= dx * 1.5; car.y -= dy * 1.5;
+      if (frameCount % 20 < 2) {
+        hits++; updateHits();
         for (let i = 0; i < 5; i++) {
           particles.push({
             x: car.x + (Math.random()-0.5)*30,
             y: car.y + (Math.random()-0.5)*30,
-            vx: (Math.random()-0.5)*3,
-            vy: (Math.random()-0.5)*3,
+            vx: (Math.random()-0.5)*3, vy: (Math.random()-0.5)*3,
             life: 20, color: '#e17055',
           });
         }
@@ -446,85 +446,84 @@ function update(dt) {
 
   // Collision with walls
   for (const wall of level.walls) {
-    if (car.x > wall.x - 20 && car.x < wall.x + wall.w + 20 &&
+    if (car.x > wall.x - 22 && car.x < wall.x + wall.w + 22 &&
         car.y > wall.y - 30 && car.y < wall.y + wall.h + 30) {
       car.speed *= -0.2;
-      car.x -= dx * 2;
-      car.y -= dy * 2;
-      if (frameCount % 30 < 2) {
-        hits++;
-        document.getElementById('hudHits').textContent = `💥 ${hits}`;
-      }
+      car.x -= dx * 2; car.y -= dy * 2;
+      if (frameCount % 30 < 2) { hits++; updateHits(); }
     }
   }
 
-  // Check if parked correctly
+  // Check parking
   const inSpot = isInParkingSpot(car, parkingSpot);
-  const angleOk = Math.abs(normalizeAngle(car.angle - level.targetAngle)) < 0.25;
+  const angleOk = Math.abs(normalizeAngle(car.angle - level.targetAngle)) < 0.3;
   const stopped = Math.abs(car.speed) < 0.1;
 
   if (inSpot && angleOk && stopped) {
     parkTimer += dt;
-    if (parkTimer > 60 && !parked) { // ~1 second of correct parking
+    if (parkTimer > 60 && !parked) {
       parked = true;
       finishLevel();
     }
   } else {
-    parkTimer = Math.max(0, parkTimer - dt);
+    parkTimer = Math.max(0, parkTimer - dt * 0.5);
   }
 
-  // Update particles
+  // Particles
   particles = particles.filter(p => p.life > 0);
-  for (const p of particles) {
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-    p.life -= dt;
-  }
+  for (const p of particles) { p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; }
 
-  // Update HUD
+  // HUD
   const elapsed = Math.floor((Date.now() - startTime) / 1000);
   document.getElementById('hudTimer').textContent = `⏱️ ${elapsed}s`;
 }
 
+function updateHits() { document.getElementById('hudHits').textContent = `💥 ${hits}`; }
+
 function finishLevel() {
   running = false;
   const elapsed = Math.floor((Date.now() - startTime) / 1000);
-
-  // Calculate stars
   let stars = 1;
   if (hits === 0) stars = 3;
   else if (hits <= 2) stars = 2;
-
-  if (elapsed < 30) stars = Math.min(3, stars + 1);
+  if (elapsed < 30) stars = Math.min(3, stars + 0); // bonus already in perfect
 
   const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
-
-  document.getElementById('resultTitle').textContent = parked ? '🎉 停車成功！' : '';
+  document.getElementById('resultTitle').textContent = '🎉 停車成功！';
   document.getElementById('resultTitle').style.color = '#ffeaa7';
   document.getElementById('resultStars').textContent = starStr;
   document.getElementById('resultStats').innerHTML =
     `⏱️ 用時：${elapsed} 秒<br>💥 碰撞：${hits} 次<br>${stars === 3 ? '🏆 完美停車！' : stars === 2 ? '👍 不錯喔！' : '💪 再練習就會更好'}`;
   document.getElementById('resultScreen').style.display = 'flex';
-
-  // Show/hide next button
   document.getElementById('nextBtn').style.display = currentLevel < LEVELS.length - 1 ? 'inline-block' : 'none';
 }
 
-// ====== COLLISION ======
-function checkCollision(car, obs) {
-  // Simple AABB approximation (rotated car treated as circle)
-  const carRadius = 30;
-  const obsCx = obs.x + obs.w / 2;
-  const obsCy = obs.y + obs.h / 2;
-  const dist = Math.hypot(car.x - obsCx, car.y - obsCy);
-  return dist < carRadius + Math.min(obs.w, obs.h) / 2 - 5;
+// ====== COLLISION (OBB - Oriented Bounding Box) ======
+function getCorners(obj, w, h, angle) {
+  const cos = Math.cos(angle), sin = Math.sin(angle);
+  const hw = w/2, hh = h/2;
+  return [
+    { x: obj.cx + (-hw*cos - -hh*sin), y: obj.cy + (-hw*sin + -hh*cos) },
+    { x: obj.cx + ( hw*cos - -hh*sin), y: obj.cy + ( hw*sin + -hh*cos) },
+    { x: obj.cx + ( hw*cos -  hh*sin), y: obj.cy + ( hw*sin +  hh*cos) },
+    { x: obj.cx + (-hw*cos -  hh*sin), y: obj.cy + (-hw*sin +  hh*cos) },
+  ];
 }
 
-function isInParkingSpot(car, spot) {
-  const cx = spot.x + spot.w / 2;
-  const cy = spot.y + spot.h / 2;
-  const dist = Math.hypot(car.x - cx, car.y - cy);
-  return dist < 35;
+function checkCarCollision(carObj, obs) {
+  // Use simplified circle-based collision with car's center
+  const carCx = carObj.x, carCy = carObj.y;
+  const obsCx = obs.cx, obsCy = obs.cy;
+  const dist = Math.hypot(carCx - obsCx, carCy - obsCy);
+  // Car effective radius ~25, obstacle radius based on size
+  const carR = 28;
+  const obsR = Math.min(obs.w, obs.h) / 2 + 5;
+  return dist < carR + obsR;
+}
+
+function isInParkingSpot(carObj, spot) {
+  const dist = Math.hypot(carObj.x - spot.cx, carObj.y - spot.cy);
+  return dist < 30;
 }
 
 function normalizeAngle(a) {
@@ -535,157 +534,185 @@ function normalizeAngle(a) {
 
 // ====== RENDER ======
 function render() {
-  // Background - parking lot
-  ctx.fillStyle = '#636e72';
+  // Parking lot ground
+  ctx.fillStyle = '#b2bec3';
   ctx.fillRect(0, 0, W, H);
 
-  // Parking lot ground texture
-  ctx.fillStyle = '#b2bec3';
-  ctx.fillRect(0, 0, W, H * 0.85);
-
-  // Draw parking lines grid
-  ctx.strokeStyle = '#dfe6e9';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([]);
-  // Horizontal lines
-  for (let ly = 80; ly < H - 60; ly += 100) {
-    ctx.beginPath(); ctx.moveTo(0, ly); ctx.lineTo(W, ly); ctx.stroke();
+  // Subtle grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  for (let gx = 0; gx < W; gx += 50) {
+    ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+  }
+  for (let gy = 0; gy < H; gy += 50) {
+    ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
   }
 
   // Bottom curb
   ctx.fillStyle = '#2d3436';
   ctx.fillRect(0, H - 80, W, 80);
-  // Curb stripes
   for (let cx = 0; cx < W; cx += 30) {
     ctx.fillStyle = (cx / 30) % 2 === 0 ? '#ffeaa7' : '#fdcb6e';
     ctx.fillRect(cx, H - 80, 30, 6);
   }
 
-  // Top wall area
-  if (level.walls.some(w => w.y === 0)) {
+  // Top wall
+  if (level.walls.some(w => w.y === 0 && w.h >= 50)) {
     ctx.fillStyle = '#2d3436';
     ctx.fillRect(0, 0, W, 50);
-    // Wall texture
     ctx.fillStyle = '#636e72';
-    for (let bx = 0; bx < W; bx += 40) {
-      ctx.fillRect(bx + 2, 5, 36, 40);
-    }
+    for (let bx = 0; bx < W; bx += 40) ctx.fillRect(bx + 2, 5, 36, 40);
   }
 
   // Side walls
-  for (const wall of level.walls) {
-    if (wall.y > 0) continue; // skip top, already drawn
-  }
   ctx.fillStyle = '#2d3436';
-  if (level.walls.some(w => w.x === 0)) {
-    ctx.fillRect(0, 0, 15, H);
-  }
-  if (level.walls.some(w => w.x === W - 20)) {
-    ctx.fillRect(W - 15, 0, 15, H);
-  }
+  if (level.walls.some(w => w.x === 0 && w.w <= 20)) ctx.fillRect(0, 0, 15, H);
+  if (level.walls.some(w => w.x === W - 20)) ctx.fillRect(W - 15, 0, 15, H);
 
-  // Draw parking spot
+  // Parking spot
   drawParkingSpot(parkingSpot);
 
-  // Draw obstacles (cars, cones)
+  // Obstacles
   for (const obs of obstacles) {
-    if (obs.type === 'car') {
-      drawParkedCar(obs.x, obs.y, obs.w, obs.h, obs.color, obs.angle || 0);
-    } else if (obs.type === 'cone') {
-      drawCone(obs.x, obs.y);
-    }
+    if (obs.type === 'car') drawCar(obs.cx, obs.cy, obs.w, obs.h, obs.angle, obs.color);
+    else if (obs.type === 'cone') drawCone(obs.cx, obs.cy);
   }
 
-  // Draw particles
+  // Particles
   for (const p of particles) {
     ctx.fillStyle = p.color;
     ctx.globalAlpha = p.life / 20;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2); ctx.fill();
   }
   ctx.globalAlpha = 1;
 
-  // Draw player car
-  drawPlayerCar(car.x, car.y, car.angle);
+  // Player car
+  drawCar(car.x, car.y, car.width, car.height, car.angle, '#e84393', true);
 
-  // Park status indicator
+  // Parking status
   const inSpot = isInParkingSpot(car, parkingSpot);
-  const angleOk = Math.abs(normalizeAngle(car.angle - level.targetAngle)) < 0.25;
+  const angleOk = Math.abs(normalizeAngle(car.angle - level.targetAngle)) < 0.3;
   const stopped = Math.abs(car.speed) < 0.1;
 
   if (inSpot && stopped && angleOk) {
-    // Green glow
-    ctx.strokeStyle = '#00b894';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(car.x, car.y, 45, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.fillStyle = 'rgba(0,184,148,0.15)';
-    ctx.beginPath();
-    ctx.arc(car.x, car.y, 45, 0, Math.PI * 2);
-    ctx.fill();
-
-    // "停好了!" text
-    ctx.fillStyle = '#00b894';
-    ctx.font = 'bold 20px sans-serif';
-    ctx.textAlign = 'center';
-    const holdTime = Math.ceil((60 - parkTimer) / 60 * 1);
-    ctx.fillText(`✅ 停好了！維持 ${holdTime} 秒`, car.x, car.y - 55);
+    ctx.strokeStyle = '#00b894'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(car.x, car.y, 45, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,184,148,0.12)';
+    ctx.beginPath(); ctx.arc(car.x, car.y, 45, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#00b894'; ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center';
+    const holdSec = Math.ceil((60 - parkTimer) / 60);
+    ctx.fillText(`✅ 停好了！維持 ${holdSec} 秒`, car.x, car.y - 50);
   } else if (inSpot && stopped) {
-    ctx.fillStyle = '#fdcb6e';
-    ctx.font = '16px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('⚠️ 角度不對，微調一下', car.x, car.y - 55);
+    ctx.fillStyle = '#fdcb6e'; ctx.font = '15px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('⚠️ 角度不對，微調方向', car.x, car.y - 50);
   } else if (inSpot) {
-    ctx.fillStyle = '#fdcb6e';
-    ctx.font = '16px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('⚠️ 停穩車子', car.x, car.y - 55);
+    ctx.fillStyle = '#fdcb6e'; ctx.font = '15px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('⚠️ 車還在動，停穩', car.x, car.y - 50);
   }
 
-  // Speed indicator
+  // Speed display
   if (Math.abs(car.speed) > 0.05) {
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '13px sans-serif';
-    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '13px sans-serif'; ctx.textAlign = 'left';
     const spd = Math.round(Math.abs(car.speed) * 15);
     ctx.fillText(car.speed > 0 ? `前進 ${spd}` : `倒車 ${spd}`, 15, H - 90);
   }
 
-  // Direction arrow (shows where car will go)
+  // Direction arrow
   if (Math.abs(car.speed) > 0.1) {
-    const arrowLen = 40 * Math.abs(car.speed) / car.maxSpeed;
-    const ax = car.x + Math.cos(car.angle) * arrowLen * (car.speed > 0 ? 1 : -1);
-    const ay = car.y + Math.sin(car.angle) * arrowLen * (car.speed > 0 ? 1 : -1);
-    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(car.x, car.y);
-    ctx.lineTo(ax, ay);
-    ctx.stroke();
+    const arrowLen = 35 * Math.abs(car.speed) / car.maxSpeed;
+    const dir = car.speed > 0 ? 1 : -1;
+    const ax = car.x + Math.sin(car.angle) * arrowLen * dir;
+    const ay = car.y - Math.cos(car.angle) * arrowLen * dir;
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(car.x, car.y); ctx.lineTo(ax, ay); ctx.stroke();
   }
+}
+
+// ====== DRAW FUNCTIONS ======
+function drawCar(cx, cy, w, h, angle, color, isPlayer) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.beginPath();
+  ctx.roundRect(-w/2 + 2, -h/2 + 2, w, h, 7);
+  ctx.fill();
+
+  // Body
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.roundRect(-w/2, -h/2, w, h, 7);
+  ctx.fill();
+
+  // Inner detail
+  if (isPlayer) {
+    ctx.fillStyle = '#d63031';
+    ctx.beginPath();
+    ctx.roundRect(-w/2 + 3, -h/2 + 3, w - 6, h - 6, 5);
+    ctx.fill();
+  }
+
+  // Windshield (front = top, -Y in car space)
+  ctx.fillStyle = 'rgba(116,185,255,0.7)';
+  ctx.beginPath();
+  ctx.roundRect(-w/2 + 5, -h/2 + 7, w - 10, h * 0.22, 4);
+  ctx.fill();
+
+  // Rear window
+  ctx.beginPath();
+  ctx.roundRect(-w/2 + 5, h * 0.18, w - 10, h * 0.2, 4);
+  ctx.fill();
+
+  // Headlights (front)
+  ctx.fillStyle = '#ffeaa7';
+  ctx.beginPath(); ctx.arc(-w/2 + 7, -h/2 + 2, 3.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(w/2 - 7, -h/2 + 2, 3.5, 0, Math.PI * 2); ctx.fill();
+
+  // Taillights (rear)
+  ctx.fillStyle = '#d63031';
+  ctx.beginPath(); ctx.arc(-w/2 + 7, h/2 - 2, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(w/2 - 7, h/2 - 2, 3, 0, Math.PI * 2); ctx.fill();
+
+  // Wheels
+  ctx.fillStyle = '#2d3436';
+  const wheelW = 5, wheelH = 12;
+  ctx.fillRect(-w/2 - 2, -h/2 + 10, wheelW, wheelH);
+  ctx.fillRect(w/2 - 3, -h/2 + 10, wheelW, wheelH);
+  ctx.fillRect(-w/2 - 2, h/2 - 22, wheelW, wheelH);
+  ctx.fillRect(w/2 - 3, h/2 - 22, wheelW, wheelH);
+
+  // Front direction indicator (only for player)
+  if (isPlayer) {
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.beginPath();
+    ctx.moveTo(0, -h/2 - 6);
+    ctx.lineTo(-4, -h/2 - 1);
+    ctx.lineTo(4, -h/2 - 1);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  ctx.restore();
 }
 
 function drawParkingSpot(spot) {
   ctx.save();
-  const cx = spot.x + spot.w / 2;
-  const cy = spot.y + spot.h / 2;
-  ctx.translate(cx, cy);
+  ctx.translate(spot.cx, spot.cy);
   ctx.rotate(spot.angle);
 
-  // Spot background (slightly different color)
-  ctx.fillStyle = 'rgba(255,234,167,0.15)';
+  // Spot fill
+  ctx.fillStyle = 'rgba(255,234,167,0.12)';
   ctx.fillRect(-spot.w/2, -spot.h/2, spot.w, spot.h);
 
   // White lines
   ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 3;
   ctx.setLineDash([]);
 
-  // Draw lines based on type
   if (spot.type === 'parallel') {
-    // Two side lines + back line
+    // Side lines + back line (bottom)
     ctx.beginPath();
     ctx.moveTo(-spot.w/2, -spot.h/2);
     ctx.lineTo(-spot.w/2, spot.h/2);
@@ -695,7 +722,7 @@ function drawParkingSpot(spot) {
     ctx.lineTo(spot.w/2, spot.h/2);
     ctx.stroke();
   } else {
-    // Perpendicular/forward - U shape
+    // U-shape (open at bottom for perpendicular/forward)
     ctx.beginPath();
     ctx.moveTo(-spot.w/2, -spot.h/2);
     ctx.lineTo(-spot.w/2, spot.h/2);
@@ -704,127 +731,19 @@ function drawParkingSpot(spot) {
     ctx.stroke();
   }
 
-  // "P" label
-  ctx.fillStyle = 'rgba(255,255,255,0.3)';
-  ctx.font = 'bold 36px sans-serif';
+  // P label
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.font = 'bold 28px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('P', 0, 8);
+  ctx.fillText('P', 0, 6);
 
   ctx.restore();
 }
 
-function drawParkedCar(x, y, w, h, color, angle) {
-  ctx.save();
-  ctx.translate(x + w/2, y + h/2);
-  ctx.rotate(angle);
-  ctx.translate(-w/2, -h/2);
-
-  // Body
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.roundRect(-3, -3, w + 6, h + 6, 8);
-  ctx.fill();
-
-  // Windshield
-  ctx.fillStyle = 'rgba(116,185,255,0.6)';
-  ctx.beginPath();
-  ctx.roundRect(5, 5, w - 10, h * 0.3, 5);
-  ctx.fill();
-
-  // Rear window
-  ctx.beginPath();
-  ctx.roundRect(5, h * 0.65, w - 10, h * 0.25, 5);
-  ctx.fill();
-
-  // Wheels
-  ctx.fillStyle = '#2d3436';
-  ctx.fillRect(-5, h * 0.15, 7, h * 0.2);
-  ctx.fillRect(w - 2, h * 0.15, 7, h * 0.2);
-  ctx.fillRect(-5, h * 0.65, 7, h * 0.2);
-  ctx.fillRect(w - 2, h * 0.65, 7, h * 0.2);
-
-  ctx.restore();
-}
-
-function drawPlayerCar(x, y, angle) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(angle);
-
-  const w = car.width, h = car.height;
-
-  // Shadow
-  ctx.fillStyle = 'rgba(0,0,0,0.2)';
-  ctx.beginPath();
-  ctx.roundRect(-w/2 + 3, -h/2 + 3, w, h, 8);
-  ctx.fill();
-
-  // Body
-  ctx.fillStyle = '#e84393';
-  ctx.beginPath();
-  ctx.roundRect(-w/2, -h/2, w, h, 8);
-  ctx.fill();
-
-  // Hood / trunk detail
-  ctx.fillStyle = '#d63031';
-  ctx.beginPath();
-  ctx.roundRect(-w/2 + 4, -h/2 + 4, w - 8, h - 8, 6);
-  ctx.fill();
-
-  // Windshield (front)
-  ctx.fillStyle = 'rgba(116,185,255,0.8)';
-  ctx.beginPath();
-  ctx.roundRect(-w/2 + 6, -h/2 + 8, w - 12, h * 0.25, 4);
-  ctx.fill();
-
-  // Rear window
-  ctx.beginPath();
-  ctx.roundRect(-w/2 + 6, h * 0.2, w - 12, h * 0.22, 4);
-  ctx.fill();
-
-  // Headlights (front = negative y direction in car space)
-  ctx.fillStyle = '#ffeaa7';
-  ctx.beginPath();
-  ctx.arc(-w/2 + 8, -h/2 + 3, 4, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(w/2 - 8, -h/2 + 3, 4, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Taillights
-  ctx.fillStyle = '#d63031';
-  ctx.beginPath();
-  ctx.arc(-w/2 + 8, h/2 - 3, 3, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(w/2 - 8, h/2 - 3, 3, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Wheels
-  ctx.fillStyle = '#2d3436';
-  // Front wheels
-  ctx.fillRect(-w/2 - 3, -h/2 + 12, 6, 14);
-  ctx.fillRect(w/2 - 3, -h/2 + 12, 6, 14);
-  // Rear wheels
-  ctx.fillRect(-w/2 - 3, h/2 - 26, 6, 14);
-  ctx.fillRect(w/2 - 3, h/2 - 26, 6, 14);
-
-  // Direction indicator (front arrow)
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.beginPath();
-  ctx.moveTo(0, -h/2 - 8);
-  ctx.lineTo(-5, -h/2 - 2);
-  ctx.lineTo(5, -h/2 - 2);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.restore();
-}
-
-function drawCone(x, y) {
-  ctx.font = '30px serif';
+function drawCone(cx, cy) {
+  ctx.font = '26px serif';
   ctx.textAlign = 'center';
-  ctx.fillText('🔶', x + 35, y + 35);
+  ctx.fillText('🔶', cx, cy + 8);
 }
 
 // ====== ACTIONS ======
@@ -833,10 +752,7 @@ function togglePause() {
   paused = !paused;
   document.getElementById('pauseOverlay').style.display = paused ? 'flex' : 'none';
 }
-function resumeGame() {
-  paused = false;
-  document.getElementById('pauseOverlay').style.display = 'none';
-}
+function resumeGame() { paused = false; document.getElementById('pauseOverlay').style.display = 'none'; }
 function quitToMenu() {
   running = false; paused = false;
   document.getElementById('pauseOverlay').style.display = 'none';
@@ -845,12 +761,9 @@ function quitToMenu() {
   document.getElementById('mobileControls').style.display = 'none';
   document.getElementById('startScreen').style.display = 'flex';
 }
-function retryLevel() {
-  startLevel(currentLevel);
-}
-function nextLevel() {
-  if (currentLevel < LEVELS.length - 1) startLevel(currentLevel + 1);
-}
+function retryLevel() { startLevel(currentLevel); }
+function nextLevel() { if (currentLevel < LEVELS.length - 1) startLevel(currentLevel + 1); }
+
 function showNotification(text) {
   const el = document.getElementById('notification');
   el.textContent = text;
@@ -860,6 +773,11 @@ function showNotification(text) {
   el.style.animation = 'fadeInOut 3s ease-in-out forwards';
   setTimeout(() => { el.style.display = 'none'; }, 3000);
 }
+
+// ====== CONSTANTS shorthand ======
+const PI = Math.PI;
+const PI2 = Math.PI / 2;
+const PI4 = Math.PI / 4;
 
 // Polyfill roundRect
 if (!CanvasRenderingContext2D.prototype.roundRect) {
@@ -880,7 +798,6 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
   };
 }
 
-// Prevent mobile scroll
 document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 </script>
 </body>
