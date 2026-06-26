@@ -3866,10 +3866,49 @@ function drawParkingSpot(spot) {
   }
 
   // P label
-  ctx.fillStyle = 'rgba(255,255,255,0.25)';
-  ctx.font = 'bold 28px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.font = 'bold 24px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('P', 0, 6);
+  ctx.fillText('P', 0, 5);
+
+  // Direction arrow showing which way the car should face when parked
+  // targetAngle is the angle the car should face when correctly parked
+  // In spot's local space (after rotate), we need to show an arrow pointing
+  // in the direction the car nose should point
+  // angle=0 → up, PI/2 → right, PI → down, -PI/2 → left
+  ctx.save();
+  // We need to rotate the arrow to match targetAngle relative to spot.angle
+  // The arrow should point in the direction of (targetAngle - spot.angle)
+  // But since we already rotated by spot.angle, we rotate by the difference
+  const relAngle = normalizeAngle(level.targetAngle - spot.angle);
+  ctx.rotate(relAngle);
+
+  // Draw a car silhouette arrow pointing up (which is the car's forward direction)
+  ctx.fillStyle = 'rgba(255,234,167,0.4)';
+  ctx.strokeStyle = 'rgba(255,234,167,0.6)';
+  ctx.lineWidth = 1.5;
+
+  // Arrow body (like a car shape pointing up)
+  const aw = 12, ah = 30;
+  ctx.beginPath();
+  ctx.moveTo(-aw/2, ah/2);   // bottom-left
+  ctx.lineTo(-aw/2, -ah/4);    // mid-left
+  ctx.lineTo(-aw/3, -ah/2);    // top-left curve
+  ctx.lineTo(aw/3, -ah/2);     // top-right curve
+  ctx.lineTo(aw/2, -ah/4);     // mid-right
+  ctx.lineTo(aw/2, ah/2);      // bottom-right
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Headlight dots at front (top)
+  ctx.fillStyle = 'rgba(255,234,100,0.5)';
+  ctx.beginPath();
+  ctx.arc(-aw/4, -ah/2 + 2, 1.5, 0, Math.PI * 2);
+  ctx.arc(aw/4, -ah/2 + 2, 1.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
 
   ctx.restore();
 }
