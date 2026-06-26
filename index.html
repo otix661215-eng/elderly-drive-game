@@ -301,6 +301,7 @@ function startGame(mode) {
     decel: 0.03,
     turnSpeed: 3.5,
     tilt: 0,
+    steeringDir: 0,
     width: 50,
     height: 80,
   };
@@ -383,16 +384,13 @@ function update(dt) {
   const up = keys['ArrowUp'] || keys['w'] || keys['W'] || mobileAccel;
   const down = keys['ArrowDown'] || keys['s'] || keys['S'];
 
-  // Steering
-  if (left) car.tilt -= car.turnSpeed * dt * 0.1;
-  if (right) car.tilt += car.turnSpeed * dt * 0.1;
-  car.tilt *= 0.92; // damping
+  // Steering - tilt is a visual lean, steeringDir is the actual turn input
+  if (left) { car.steeringDir = -1; car.tilt = Math.max(car.tilt - car.turnSpeed * dt * 0.08, -1); }
+  else if (right) { car.steeringDir = 1; car.tilt = Math.min(car.tilt + car.turnSpeed * dt * 0.08, 1); }
+  else { car.steeringDir = 0; car.tilt *= 0.92; } // damping when no input
 
-  // Clamp tilt
-  car.tilt = Math.max(-1, Math.min(1, car.tilt));
-
-  // Move car laterally
-  car.x += car.tilt * car.turnSpeed * dt;
+  // Move car laterally - direction follows steering input directly
+  car.x += car.steeringDir * car.turnSpeed * dt * (0.5 + car.speed * 0.3);
   car.x = Math.max(140, Math.min(W - 140, car.x));
 
   // Speed
@@ -403,9 +401,9 @@ function update(dt) {
   // Auto-cruise minimum speed
   if (!up && !down && car.speed < 0.5) car.speed = 0.5;
 
-  // Road curve
-  road.targetCurve = car.tilt * 0.8;
-  road.curve += (road.targetCurve - road.curve) * 0.05 * dt;
+  // Road curve - follows steering direction (not tilt), scaled by speed
+  road.targetCurve = car.steeringDir * 0.6;
+  road.curve += (road.targetCurve - road.curve) * 0.03 * dt;
   road.offset += car.speed * dt;
   distance += car.speed * 0.002 * dt;
 
